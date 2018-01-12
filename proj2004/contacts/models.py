@@ -4,10 +4,10 @@ from django.contrib.auth.models import User
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    idnum = models.CharField('学号', max_length=10)
+    # User.username is used as student id
     name = models.CharField('姓名', max_length=100)
-    enroll_year = models.IntegerField('入学年份')
-    graduate_year = models.IntegerField('毕业年份')
+    enroll_year = models.IntegerField('入学年份', default=2004)
+    graduate_year = models.IntegerField('毕业年份', default=2008)
     department = models.CharField('院系', max_length=100)
     major = models.CharField('专业', max_length=100)
     # class is a keyword in Python
@@ -24,10 +24,18 @@ class Profile(models.Model):
     address = models.CharField('通讯地址', max_length=100, blank=True)
     postcode = models.CharField('邮编', max_length=100, blank=True)
 
+    @property
+    def student_id(self):
+        return self.user.username
+
+    @property
+    def email(self):
+        return self.user.email
+
     def __str__(self):
-        return self.idnum + ' ' + self.name
+        return self.name + ' ' + self.student_id + ' ' + self.clazz
 
     class Meta:
         verbose_name = '个人信息'
         verbose_name_plural = '个人信息'
-        ordering = ['idnum']
+        ordering = ['name']
