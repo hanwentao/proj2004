@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <a class="navbar-brand" href="#">清华四字班秩年</a>
+</nav>
+<main role="main" class="container">
+  <h1>个人信息</h1>
+  <form action="" method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+    <button type="submit" class="btn btn-primary">提交</button>
+    {% endbuttons %}
+  </form>
+</main>
+{% endblock %}
