@@ -1,3 +1,5 @@
+import hashlib
+
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -49,6 +51,14 @@ class Profile(models.Model):
     location = models.CharField('所在地区', max_length=100, blank=True)
     address = models.CharField('通讯地址', max_length=100, blank=True)
     postcode = models.CharField('邮编', max_length=100, blank=True)
+
+    @property
+    def verification_code(self):
+        m = hashlib.md5()
+        m.update(self.student_id.encode())
+        m.update(self.name.encode())
+        m.update('salt'.encode())
+        return m.hexdigest()[:6]
 
     def get_absolute_url(self):
         return reverse('profile', kwargs={'username': self.user.username})
