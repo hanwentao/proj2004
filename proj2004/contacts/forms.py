@@ -12,7 +12,7 @@ class ProfileForm(ModelForm):
             'position',
             'title',
             'mobile',
-            #'email',
+            'email',
             'wechat',
             'telephone',
             'location',

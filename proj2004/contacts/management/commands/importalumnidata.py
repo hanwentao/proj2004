@@ -10,6 +10,7 @@ from ...models import Profile
 def create_user_with_basic_info(student_id, name, enroll_year, graduate_year, department, major, clazz):
     user, created = User.objects.get_or_create(username=student_id)
     profile, _ = Profile.objects.get_or_create(user=user)
+    profile.student_id = student_id
     profile.name = name
     profile.enroll_year = enroll_year
     profile.graduate_year = graduate_year
