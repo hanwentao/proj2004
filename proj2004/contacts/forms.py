@@ -6,4 +6,16 @@ from .models import Profile
 class ProfileForm(ModelForm):
     class Meta:
         model = Profile
-        fields = ['name', 'enroll_year', 'graduate_year', 'department', 'major', 'clazz', 'industry', 'organization', 'position', 'title', 'mobile', 'wechat', 'telephone', 'location', 'address', 'postcode']
+        fields = [
+            'industry',
+            'organization',
+            'position',
+            'title',
+            'mobile',
+            #'email',
+            'wechat',
+            'telephone',
+            'location',
+            'address',
+            'postcode',
+        ]

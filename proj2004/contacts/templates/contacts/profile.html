@@ -9,6 +9,13 @@
   <h1>个人信息</h1>
   <form action="" method="post" class="form">
     {% csrf_token %}
+    <div class="form-group"><label>学号</label><input type="text" readonly class="form-control-plaintext" value="{{ profile.student_id }}"></div>
+    <div class="form-group"><label>姓名</label><input type="text" readonly class="form-control-plaintext" value="{{ profile.name }}"></div>
+    <div class="form-group"><label>院系</label><input type="text" readonly class="form-control-plaintext" value="{{ profile.department }}"></div>
+    <div class="form-group"><label>班级</label><input type="text" readonly class="form-control-plaintext" value="{{ profile.clazz }}"></div>
+    <div class="form-group"><label>专业</label><input type="text" readonly class="form-control-plaintext" value="{{ profile.major }}"></div>
+    <div class="form-group"><label>入学年份</label><input type="text" readonly class="form-control-plaintext" value="{{ profile.enroll_year }}"></div>
+    <div class="form-group"><label>毕业年份</label><input type="text" readonly class="form-control-plaintext" value="{{ profile.graduate_year }}"></div>
     {% bootstrap_form form %}
     {% buttons %}
     <button type="submit" class="btn btn-primary">提交</button>

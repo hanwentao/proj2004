@@ -8,11 +8,12 @@ This project is for Class 2008 of Tsinghua University (四字班), created at th
 
 * 提前导入字段
   * 学号
+  * 姓名
+  * 院系
+  * 班级
+  * 专业
   * 入学年
   * 毕业年
-  * 院系
-  * 专业
-  * 班级
 * 需要收集字段
   * 所在行业
   * 工作单位
