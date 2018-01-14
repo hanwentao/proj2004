@@ -51,7 +51,7 @@ class Profile(models.Model):
     wechat = models.CharField('微信号', max_length=100, blank=True, help_text='查看微信号的方法：打开微信→我→微信号。')
     telephone = PhoneNumberField('固定电话', blank=True, help_text='请填写中国大陆格式（固话须带区号）或国际格式（以加号开头）的电话号码，结果将统一为国际格式。')
     location = models.CharField('所在地区', max_length=100, blank=True)
-    address = models.CharField('通讯地址', max_length=100, blank=True, help_text='请填写完整、规范的通讯地址。如在国外，可使用外文地址。')
+    address = models.CharField('通讯地址', max_length=250, blank=True, help_text='请填写完整、规范的通讯地址。如在国外，可使用外文地址。')
     postcode = models.CharField('邮编', max_length=100, blank=True)
 
     @property
