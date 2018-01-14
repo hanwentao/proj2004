@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'contacts.apps.ContactsConfig',
+    'phonenumber_field',
     'bootstrap4',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -125,3 +126,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+# For django-phonenumber-field
+PHONENUMBER_DEFAULT_REGION = 'CN'

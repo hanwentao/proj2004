@@ -4,6 +4,8 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
 
+from phonenumber_field.modelfields import PhoneNumberField
+
 INDUSTRY_LIST = (
     ('A', '农、林、牧、渔业'),
     ('B', '采矿业'),
@@ -44,10 +46,10 @@ class Profile(models.Model):
     organization = models.CharField('工作单位', max_length=100, blank=True, help_text='请填写工作单位的官方全称。')
     position = models.CharField('职务', max_length=100, blank=True)
     title = models.CharField('职称', max_length=100, blank=True)
-    mobile = models.CharField('手机', max_length=100, blank=True, help_text='如果是境外手机号，请用加号开始，加入国际电话区号。例如：+64 3 477 4000。')
+    mobile = PhoneNumberField('手机', blank=True, help_text='请填写中国大陆格式（固话须带区号）或国际格式（以加号开头）的电话号码，结果将统一为国际格式。')
     email = models.EmailField('电子邮箱', blank=True)
-    wechat = models.CharField('微信号', max_length=100, blank=True, help_text='查看微信号的位置：微信→我→微信号。')
-    telephone = models.CharField('固定电话', max_length=100, blank=True, help_text='规则同手机。')
+    wechat = models.CharField('微信号', max_length=100, blank=True, help_text='查看微信号的方法：打开微信→我→微信号。')
+    telephone = PhoneNumberField('固定电话', blank=True, help_text='请填写中国大陆格式（固话须带区号）或国际格式（以加号开头）的电话号码，结果将统一为国际格式。')
     location = models.CharField('所在地区', max_length=100, blank=True)
     address = models.CharField('通讯地址', max_length=100, blank=True, help_text='请填写完整、规范的通讯地址。如在国外，可使用外文地址。')
     postcode = models.CharField('邮编', max_length=100, blank=True)
