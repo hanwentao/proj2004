@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    command: python proj2004/manage.py runserver 0:8000
+    volumes:
+      - .:/opt/code
+    ports:
+      - ${PORT:-8000}:8000
