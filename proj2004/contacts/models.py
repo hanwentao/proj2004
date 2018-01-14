@@ -28,7 +28,7 @@ class Profile(models.Model):
         return reverse('profile', kwargs={'username': self.user.username})
 
     def __str__(self):
-        return self.name + ' ' + self.student_id + ' ' + self.clazz
+        return f'{self.student_id} {self.name} {self.clazz}'
 
     class Meta:
         verbose_name = '个人信息'
