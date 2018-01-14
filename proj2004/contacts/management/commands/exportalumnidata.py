@@ -12,10 +12,12 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('-W', '--without-header', action='store_true', help='Specifies that output has no header row.')
+        parser.add_argument('-u', '--with-url', action='store_true', help='Specifies that output has url column.')
         parser.add_argument('-o', '--output', type=argparse.FileType('w'), help='Outputs to file.')
 
     def handle(self, *args, **options):
         with_header = not options['without_header']
+        with_url = options['with_url']
         out = options['output']
         if not out:
             out = sys.stdout
@@ -26,7 +28,7 @@ class Command(BaseCommand):
                 '工作单位、职务/职称', '所在行业',
                 '手机', '固定电话', '电子邮箱', '微信号', '所在地区', '通讯地址', '邮编',
                 '是否开通校友邮箱', '是否办理校友卡',
-            ])
+            ] + (['URL'] if with_url else []))
         num_alumni = 0
         for profile in Profile.objects.order_by('student_id'):
             writer.writerow([
@@ -50,7 +52,7 @@ class Command(BaseCommand):
                 profile.postcode,
                 '',
                 '',
-            ])
+            ] + ([profile.get_absolute_url() + '?code=' + profile.verification_code] if with_url else []))
             num_alumni += 1
             if out != sys.stdout and num_alumni % 100 == 0:
                 self.stdout.write(f'Export... {num_alumni} written.')
