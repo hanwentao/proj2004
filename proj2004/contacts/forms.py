@@ -25,7 +25,8 @@ class ExtraForm(ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        cleaned_data['email_prefix'] = cleaned_data['email_prefix'].lower()
+        if cleaned_data.get('email_prefix', ''):
+            cleaned_data['email_prefix'] = cleaned_data['email_prefix'].lower()
         return cleaned_data
 
     class Meta:
