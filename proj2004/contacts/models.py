@@ -74,6 +74,10 @@ class Profile(models.Model):
         verbose_name_plural = '个人信息'
         ordering = ['student_id']
 
+def get_photo_upload_path(instance, filename):
+    profile = instance.user.profile
+    return f'uploads/{profile.clazz}/{profile.name}/{filename}'
+
 
 class Extra(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -81,6 +85,7 @@ class Extra(models.Model):
     email_prefix = models.CharField('校友邮箱用户名前缀', max_length=32, unique=True, blank=True, null=True,
         validators=[RegexValidator(r'^[A-Za-z][A-Za-z_-]*[A-Za-z]$', '邮箱用户名前缀不合法。')],
         help_text='如果要开通 @tsinghua.org.cn 校友邮箱，请填写想要的用户名前缀。用户名前缀的合法字符包括英文字母、减号和下划线。英文字母不区分大小写，用户名将自动加入 04 作为后缀。')
+    photo = models.ImageField('校友卡证件照', blank=True, upload_to=get_photo_upload_path, help_text='如要要办理校友卡，请上传证件照。')
 
     class Meta:
         verbose_name = '额外信息'

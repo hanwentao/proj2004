@@ -33,4 +33,5 @@ class ExtraForm(ModelForm):
         fields = [
             'attend',
             'email_prefix',
+            'photo',
         ]

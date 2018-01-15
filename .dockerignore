@@ -19,3 +19,4 @@ env/
 # Application data
 data/
 **/db.sqlite3
+**/uploads/

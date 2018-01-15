@@ -23,7 +23,7 @@ def profile(request, username):
     extra_form = None
     if request.method == 'POST':
         profile_form = ProfileForm(request.POST, instance=profile)
-        extra_form = ExtraForm(request.POST, instance=extra)
+        extra_form = ExtraForm(request.POST, request.FILES, instance=extra)
         if profile_form.is_valid() and extra_form.is_valid():
             profile_form.save()
             extra_form.save()

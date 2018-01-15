@@ -127,5 +127,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+# For photo upload
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # For django-phonenumber-field
 PHONENUMBER_DEFAULT_REGION = 'CN'
