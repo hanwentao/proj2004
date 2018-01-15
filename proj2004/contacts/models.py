@@ -72,3 +72,12 @@ class Profile(models.Model):
         verbose_name = '个人信息'
         verbose_name_plural = '个人信息'
         ordering = ['student_id']
+
+
+class Extra(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    attend = models.NullBooleanField('是否参加秩年校庆活动', help_text='全校秩年校庆活动安排在2018年4月29日。')
+
+    class Meta:
+        verbose_name = '额外信息'
+        verbose_name_plural = '额外信息'

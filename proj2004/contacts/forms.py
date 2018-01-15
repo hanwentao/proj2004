@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from .models import Profile
+from .models import Profile, Extra
 
 
 class ProfileForm(ModelForm):
@@ -18,4 +18,12 @@ class ProfileForm(ModelForm):
             'location',
             'address',
             'postcode',
+        ]
+
+
+class ExtraForm(ModelForm):
+    class Meta:
+        model = Extra
+        fields = [
+            'attend',
         ]
