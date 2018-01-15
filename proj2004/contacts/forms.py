@@ -36,3 +36,8 @@ class ExtraForm(ModelForm):
             'email_prefix',
             'photo',
         ]
+        error_messages = {
+            'email_prefix': {
+                'unique': '该邮箱用户名前缀已经被其他用户登记使用。',
+            }
+        }
