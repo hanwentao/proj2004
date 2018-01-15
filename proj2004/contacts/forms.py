@@ -22,8 +22,15 @@ class ProfileForm(ModelForm):
 
 
 class ExtraForm(ModelForm):
+
+    def clean(self):
+        cleaned_data = super().clean()
+        cleaned_data['email_prefix'] = cleaned_data['email_prefix'].lower()
+        return cleaned_data
+
     class Meta:
         model = Extra
         fields = [
             'attend',
+            'email_prefix',
         ]

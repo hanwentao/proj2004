@@ -2,6 +2,7 @@ import hashlib
 
 from django.db import models
 from django.urls import reverse
+from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 
 from phonenumber_field.modelfields import PhoneNumberField
@@ -77,6 +78,9 @@ class Profile(models.Model):
 class Extra(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     attend = models.NullBooleanField('是否参加秩年校庆活动', help_text='全校秩年校庆活动安排在2018年4月29日。')
+    email_prefix = models.CharField('校友邮箱用户名前缀', max_length=32, unique=True, blank=True, null=True,
+        validators=[RegexValidator(r'^[A-Za-z][A-Za-z_-]*[A-Za-z]$', '邮箱用户名前缀不合法。')],
+        help_text='如果要开通 @tsinghua.org.cn 校友邮箱，请填写想要的用户名前缀。用户名前缀的合法字符包括英文字母、减号和下划线。英文字母不区分大小写，用户名将自动加入 04 作为后缀。')
 
     class Meta:
         verbose_name = '额外信息'
