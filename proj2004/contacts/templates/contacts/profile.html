@@ -22,7 +22,7 @@
     <h2>秩年与校友服务信息</h2>
     {% bootstrap_form extra_form %}
     {% if extra.photo %}
-    <div class="form-group"><img src="{{ extra.photo.url }}" alt="{{ profile.name }}"></div>
+    <div class="form-group"><img src="{{ extra.photo.url }}" class="img-fluid rounded" alt="{{ profile.name }}"></div>
     {% endif %}
     {% buttons %}
     <button type="submit" class="btn btn-primary">提交</button>
