@@ -133,3 +133,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # For django-phonenumber-field
 PHONENUMBER_DEFAULT_REGION = 'CN'
+
+# For auth
+LOGIN_URL = '/account/login/'

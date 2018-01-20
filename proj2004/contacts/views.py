@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import HttpResponseForbidden
 from django.shortcuts import (
     get_object_or_404,
@@ -5,6 +6,7 @@ from django.shortcuts import (
     render,
 )
 from django.contrib.auth.models import User
+from django.contrib.auth import login
 
 from .forms import (
     ProfileForm,
@@ -17,11 +19,19 @@ def index(request):
     return render(request, 'contacts/index.html')
 
 def profile(request, username):
-    code = request.GET.get('code', '')
     user = get_object_or_404(User, username=username)
+    password_set = user.has_usable_password()
     profile = user.profile
-    if code != profile.verification_code:
-        return HttpResponseForbidden('Invalid verification code')
+    if password_set:
+        if not request.user.is_authenticated:
+            return redirect(f'{settings.LOGIN_URL}?next={request.path}')
+        if username != request.user.username:
+            print(username, repr(request.user.username))
+            return HttpResponseForbidden('你不能访问其他人的个人信息。')
+    else:
+        code = request.GET.get('code', '')
+        if code != profile.verification_code:
+            return HttpResponseForbidden('验证码错误，请与贵班联系人确认网址信息。')
     extra = user.extra
     profile_form = None
     extra_form = None
@@ -29,13 +39,16 @@ def profile(request, username):
     if request.method == 'POST':
         profile_form = ProfileForm(request.POST, instance=profile)
         extra_form = ExtraForm(request.POST, request.FILES, instance=extra)
-        set_password_form = SetPasswordForm(user, request.POST)
-        if profile_form.is_valid() and extra_form.is_valid() and set_password_form.is_valid():
+        if not password_set:
+            set_password_form = SetPasswordForm(user, request.POST)
+        if (profile_form.is_valid() and extra_form.is_valid() and
+            (password_set or set_password_form.is_valid())):
             profile_form.save()
             extra_form.save()
-            set_password_form.save()
-            # TODO: log in and redirect to profile page if password is set
-            return redirect(profile.get_absolute_url() + f'?code={profile.verification_code}')
+            if not password_set:
+                set_password_form.save()
+                login(request, user)
+            return redirect(profile)
     if profile_form is None:
         profile_form = ProfileForm(instance=profile)
     if extra_form is None:
