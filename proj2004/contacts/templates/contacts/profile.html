@@ -24,6 +24,10 @@
     {% if extra.photo %}
     <div class="form-group"><img src="{{ extra.photo.url }}" class="img-fluid rounded" alt="{{ profile.name }}"></div>
     {% endif %}
+    {% if not user.has_usable_password %}
+    <h2>安全信息</h2>
+    {% bootstrap_form set_password_form %}
+    {% endif %}
     {% buttons %}
     <button type="submit" class="btn btn-primary">提交</button>
     {% endbuttons %}

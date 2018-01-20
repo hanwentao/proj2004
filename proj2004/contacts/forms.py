@@ -1,9 +1,10 @@
-from django.forms import ModelForm
+from django import forms
+from django.contrib.auth.forms import SetPasswordForm
 
 from .models import Profile, Extra
 
 
-class ProfileForm(ModelForm):
+class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = [
@@ -21,7 +22,7 @@ class ProfileForm(ModelForm):
         ]
 
 
-class ExtraForm(ModelForm):
+class ExtraForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
