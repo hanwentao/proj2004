@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block body %}
+<header>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">清华四字班秩年</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-main" aria-controls="navbar-main" aria-expanded="false" aria-label="开关导航栏">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbar-main">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">首页<span class="sr-only">（当前页）</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contacts/{{ user.username }}/">个人信息</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contacts/manage/">管理</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+{% block content %}{% endblock %}
+<footer class="container">
+  <hr>
+  <p class="text-center">清华大学2004级秩年工作小组 版权所有</p>
+</footer>
+{% endblock %}
