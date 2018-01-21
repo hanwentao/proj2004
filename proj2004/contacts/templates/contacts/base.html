@@ -19,14 +19,16 @@
             <a class="nav-link" href="{% url 'home' %}">首页</a>
           </li>
           {% endif %}
-          {% if page == 'profile' %}
+          {% if user.is_authenticated %}
+          {%   if page == 'profile' %}
           <li class="nav-item active">
             <a class="nav-link" href="#">个人信息<span class="sr-only">（当前页）</span></a>
           </li>
-          {% else %}
+          {%   else %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'profile' user.username %}">个人信息</a>
           </li>
+          {%   endif %}
           {% endif %}
         </ul>
         {% if user.is_authenticated %}
