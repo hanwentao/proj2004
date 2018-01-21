@@ -10,16 +10,31 @@
       </button>
       <div class="collapse navbar-collapse" id="navbar-main">
         <ul class="navbar-nav mr-auto">
+          {% if page == 'home' %}
           <li class="nav-item active">
             <a class="nav-link" href="#">首页<span class="sr-only">（当前页）</span></a>
           </li>
+          {% else %}
           <li class="nav-item">
-            <a class="nav-link" href="/contacts/{{ user.username }}/">个人信息</a>
+            <a class="nav-link" href="{% url 'home' %}">首页</a>
           </li>
+          {% endif %}
+          {% if page == 'profile' %}
+          <li class="nav-item active">
+            <a class="nav-link" href="#">个人信息</a>
+          </li>
+          {% else %}
           <li class="nav-item">
-            <a class="nav-link" href="/contacts/manage/">管理</a>
+            <a class="nav-link" href="{% url 'profile' user.username %}">个人信息</a>
           </li>
+          {% endif %}
         </ul>
+        {% if user.is_authenticated %}
+        <span class="navbar-text">你好，{{ user.profile.name }}！</span>
+        <span class="navbar-text"><a href="{% url 'logout' %}">注销</a></span>
+        {% else %}
+        <span class="navbar-text"><a href="{% url 'login' %}">登录</a></span>
+        {% endif %}
       </div>
     </div>
   </nav>

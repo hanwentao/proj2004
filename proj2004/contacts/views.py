@@ -15,8 +15,11 @@ from .forms import (
 )
 
 
-def index(request):
-    return render(request, 'contacts/index.html')
+def home(request):
+    context = {
+        'page': 'home',
+    }
+    return render(request, 'contacts/home.html', context)
 
 def profile(request, username):
     user = get_object_or_404(User, username=username)
@@ -56,6 +59,7 @@ def profile(request, username):
     if set_password_form is None:
         set_password_form = SetPasswordForm(user)
     context = {
+        'page': 'profile',
         'user': user,
         'profile': profile,
         'extra': extra,
