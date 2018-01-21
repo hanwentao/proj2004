@@ -4,7 +4,7 @@
 {% block content %}
 <main role="main" class="container">
   <h1>个人信息</h1>
-  <form enctype="multipart/form-data" action="" method="post" class="form">
+  <form enctype="multipart/form-data" action="" method="post">
     {% csrf_token %}
     <h2>学籍信息</h2>
     <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">学号</label><div class="col-8 col-sm-10"><input type="text" readonly class="form-control-plaintext" value="{{ profile.student_id }}"></div></div>

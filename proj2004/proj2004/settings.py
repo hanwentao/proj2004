@@ -136,4 +136,5 @@ PHONENUMBER_DEFAULT_REGION = 'CN'
 
 # For auth
 LOGIN_URL = '/account/login/'
+LOGIN_REDIRECT_URL = '/contacts/'
 LOGOUT_REDIRECT_URL = '/contacts/'
