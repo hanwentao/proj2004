@@ -19,9 +19,9 @@ from django.views import static
 from django.urls import path, include
 
 urlpatterns = [
-    path('contacts/', include('contacts.urls')),
     path('account/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
+    path('', include('contacts.urls')),
 ]
 
 # Serve uploaded files for development mode
