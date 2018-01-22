@@ -18,8 +18,13 @@ class LocationWidget(forms.widgets.MultiWidget):
         if value:
             values = value.split('|')
         else:
-            values = ['国家', '州省', '城市']
+            values = ['', '', '']
         return values
+
+    class Media:
+        js = (
+            'js/location.js',
+        )
 
 
 class LocationField(forms.MultiValueField):
@@ -29,8 +34,8 @@ class LocationField(forms.MultiValueField):
         del kwargs['max_length']
         error_messages = {}
         fields = (
-            forms.CharField(),
-            forms.CharField(),
+            forms.CharField(required=False),
+            forms.CharField(required=False),
             forms.CharField(required=False),
         )
         super().__init__(error_messages=error_messages, fields=fields, require_all_fields=False, widget=LocationWidget, **kwargs)

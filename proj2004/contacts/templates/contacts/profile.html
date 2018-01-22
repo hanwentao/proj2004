@@ -1,6 +1,16 @@
 {% extends "contacts/base.html" %}
 {% load bootstrap4 %}
 
+{% block style %}
+{{ block.super }}
+{{ profile_form.media.css }}
+{% endblock %}
+
+{% block script %}
+{{ block.super }}
+{{ profile_form.media.js }}
+{% endblock %}
+
 {% block content %}
 <main role="main" class="container">
   <h1>个人信息</h1>
