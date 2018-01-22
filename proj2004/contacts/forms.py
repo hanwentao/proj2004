@@ -23,6 +23,7 @@ class LocationWidget(forms.widgets.MultiWidget):
 
     class Media:
         js = (
+            'js/location-data.js',
             'js/location.js',
         )
 

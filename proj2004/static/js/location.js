@@ -1,18 +1,4 @@
 $(function() {
-  var locationData = {
-    regions: ['中国', '美国'],
-    info: {
-      '中国': {
-        regions: ['北京', '浙江'],
-        info: {
-          '浙江': {
-            regions: ['杭州', '宁波']
-          }
-        }
-      }
-    }
-  };
-
   var updateOptions = function(field, data, selected) {
     field.empty();
     if (data === undefined) {
