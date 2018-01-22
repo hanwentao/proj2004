@@ -135,11 +135,8 @@ class ProfileForm(forms.ModelForm):
             'postcode',
         ]
         field_classes = {
-            'location': LocationField,
-        }
-
-        field_classes = {
             'industry': IndustryField,
+            'location': LocationField,
         }
 
 
