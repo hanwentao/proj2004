@@ -77,6 +77,47 @@ class IndustryField(forms.MultiValueField):
             return ''
 
 
+class LocationWidget(forms.widgets.MultiWidget):
+
+    def __init__(self, attrs=None):
+        widgets = (
+            forms.widgets.TextInput(attrs=attrs),
+            forms.widgets.TextInput(attrs=attrs),
+            forms.widgets.TextInput(attrs=attrs),
+        )
+        super().__init__(widgets, attrs)
+
+    def decompress(self, value):
+        if value:
+            values = value.split('|')
+        else:
+            values = ['', '', '']
+        return values
+
+    class Media:
+        js = (
+            'js/location-data.js',
+            'js/location.js',
+        )
+
+
+class LocationField(forms.MultiValueField):
+
+    def __init__(self, **kwargs):
+        # XXX: MultiValueField doesn't need max_length
+        del kwargs['max_length']
+        error_messages = {}
+        fields = (
+            forms.CharField(required=False),
+            forms.CharField(required=False),
+            forms.CharField(required=False),
+        )
+        super().__init__(error_messages=error_messages, fields=fields, require_all_fields=False, widget=LocationWidget, **kwargs)
+
+    def compress(self, data_list):
+        return '|'.join(data_list)
+
+
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
@@ -93,6 +134,9 @@ class ProfileForm(forms.ModelForm):
             'address',
             'postcode',
         ]
+        field_classes = {
+            'location': LocationField,
+        }
 
         field_classes = {
             'industry': IndustryField,
