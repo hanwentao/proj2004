@@ -31,7 +31,7 @@ $(function() {
   cityField = $("#id_location_2");
   updateOptions(countryField, locationData, selectedCountry);
   updateOptions(provinceField, locationData.info[selectedCountry], selectedProvince);
-  if (locationData.info[selectedCountry] !== undefined) {
+  if (locationData.info[selectedCountry] !== undefined && locationData.info[selectedCountry].info !== undefined) {
     updateOptions(cityField, locationData.info[selectedCountry].info[selectedProvince], selectedCity);
   } else {
     updateOptions(cityField);
@@ -48,6 +48,10 @@ $(function() {
     var selectedCountry = $("#id_location_0").val();
     var selectedProvince = $(this).val();
     var cityField = $("#id_location_2");
-    updateOptions(cityField, locationData.info[selectedCountry].info[selectedProvince]);
+    if (locationData.info[selectedCountry].info !== undefined) {
+      updateOptions(cityField, locationData.info[selectedCountry].info[selectedProvince]);
+    } else {
+      updateOptions(cityField);
+    }
   });
 });
