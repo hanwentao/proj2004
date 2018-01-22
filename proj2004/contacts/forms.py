@@ -3,6 +3,79 @@ from django.contrib.auth.forms import SetPasswordForm
 
 from .models import Profile, Extra
 
+INDUSTRY_CHOICES = (
+    '农、林、牧、渔业',
+    '采矿业',
+    '制造业',
+    '电力、热力、燃气及水生产和供应业',
+    '建筑业',
+    '批发和零售业',
+    '交通运输、仓储和邮政业',
+    '住宿和餐饮业',
+    '信息传输、软件和信息技术服务业',
+    '金融业',
+    '房地产业',
+    '租赁和商务服务业',
+    '科学研究和技术服务业',
+    '水利、环境和公共设施管理业',
+    '居民服务、修理和其他服务业',
+    '教育',
+    '卫生和社会工作',
+    '文化、体育和娱乐业',
+    '公共管理、社会保障和社会组织',
+    '国际组织',
+)
+
+
+class IndustryWidget(forms.widgets.MultiWidget):
+
+    def __init__(self, attrs=None):
+        widgets = (
+            forms.widgets.TextInput(attrs=attrs),
+            forms.widgets.TextInput(attrs=attrs),
+        )
+        super().__init__(widgets, attrs)
+
+    def decompress(self, value):
+        if value in INDUSTRY_CHOICES:
+            return [value, '']
+        elif value:
+            if value != '其他':
+                return ['其他', value]
+            else:
+                return ['其他', '']
+        else:
+            return ['', '']
+
+    class Media:
+        js = (
+            'js/industry-data.js',
+            'js/industry.js',
+        )
+
+
+class IndustryField(forms.MultiValueField):
+
+    def __init__(self, **kwargs):
+        del kwargs['max_length']
+        error_messages = {}
+        fields = (
+            forms.CharField(required=False),
+            forms.CharField(required=False),
+        )
+        super().__init__(error_messages=error_messages, fields=fields, require_all_fields=False, widget=IndustryWidget, **kwargs)
+
+    def compress(self, data_list):
+        if data_list:
+            if data_list[0] != '其他':
+                return data_list[0]
+            elif len(data_list) > 1 and data_list[1]:
+                return data_list[1]
+            else:
+                return '其他'
+        else:
+            return ''
+
 
 class ProfileForm(forms.ModelForm):
     class Meta:
@@ -20,6 +93,10 @@ class ProfileForm(forms.ModelForm):
             'address',
             'postcode',
         ]
+
+        field_classes = {
+            'industry': IndustryField,
+        }
 
 
 class ExtraForm(forms.ModelForm):
