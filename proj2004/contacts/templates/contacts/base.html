@@ -32,7 +32,7 @@
           {% endif %}
         </ul>
         {% if user.is_authenticated %}
-        <span class="navbar-text">你好，{{ user.profile.name }}！</span>
+        <span class="navbar-text">你好，{% if user.is_superuser %}管理员{% else %}{{ user.profile.name }}{% endif %}！</span>
         <span class="navbar-text"><a href="{% url 'logout' %}">注销</a></span>
         {% else %}
         <span class="navbar-text"><a href="{% url 'login' %}">登录</a></span>
