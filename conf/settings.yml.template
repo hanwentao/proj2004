@@ -1,0 +1,11 @@
+secret_key: '<secret key>'
+allowed_hosts:
+  - '*'
+db:
+  ENGINE: django.db.backends.mysql
+  HOST: db
+  NAME: proj2004
+  USER: root
+  PASSWORD: 'password'
+  OPTIONS:
+    init_command: "SET sql_mode='STRICT_TRANS_TABLES'"
