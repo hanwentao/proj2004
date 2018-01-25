@@ -1,6 +1,7 @@
 import hashlib
 
 from django.db import models
+from django.conf import settings
 from django.urls import reverse
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
@@ -35,7 +36,7 @@ class Profile(models.Model):
         m = hashlib.md5()
         m.update(self.student_id.encode())
         m.update(self.name.encode())
-        m.update('salt'.encode())
+        m.update(settings.SECRET_KEY.encode())
         return m.hexdigest()[:6]
 
     def get_absolute_url(self):
