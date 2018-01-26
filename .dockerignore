@@ -19,5 +19,3 @@ env/
 # Application configuration and data
 conf/
 data/
-**/db.sqlite3
-**/uploads/

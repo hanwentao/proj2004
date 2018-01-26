@@ -3,6 +3,4 @@
 /env/
 __pycache__/
 /data/
-db.sqlite3
-uploads/
 /conf/settings.yml

@@ -14,6 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+DATA_DIR = os.path.join(os.path.dirname(BASE_DIR), 'data')
 
 
 # Quick-start development settings - unsuitable for production
@@ -81,7 +82,7 @@ WSGI_APPLICATION = 'proj2004.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(DATA_DIR, 'db.sqlite3'),
     }
 }
 
@@ -129,7 +130,7 @@ STATICFILES_DIRS = [
 
 # For photo upload
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(DATA_DIR, 'media')
 
 # For django-phonenumber-field
 PHONENUMBER_DEFAULT_REGION = 'CN'
