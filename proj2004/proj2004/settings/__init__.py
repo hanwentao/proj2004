@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'contacts.apps.ContactsConfig',
     'phonenumber_field',
+    'imagekit',
     'bootstrap4',
     'django.contrib.admin',
     'django.contrib.auth',
