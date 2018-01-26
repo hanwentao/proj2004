@@ -133,6 +133,7 @@ class ProfileForm(forms.ModelForm):
             'location',
             'address',
             'postcode',
+            'remark',
         ]
         field_classes = {
             'industry': IndustryField,

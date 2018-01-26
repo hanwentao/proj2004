@@ -32,6 +32,7 @@ class Profile(models.Model):
     location = models.CharField('所在地区', max_length=100, blank=True)
     address = models.CharField('通讯地址', max_length=250, blank=True, help_text='请填写完整、规范的通讯地址。如在国外，可使用外文地址。')
     postcode = models.CharField('邮编', max_length=100, blank=True)
+    remark = models.CharField('备注', max_length=250, blank=True, help_text='如果以上内容有特殊情况的，可在备注栏中说明。例如：学籍信息有误；有多个手机号、邮箱；有多个常住地等。')
 
     @property
     def verification_code(self):
