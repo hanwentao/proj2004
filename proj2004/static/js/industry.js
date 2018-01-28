@@ -1,8 +1,11 @@
 $(function() {
-  function createOptions(field, choices) {
+  function createOptions(field, choices, value) {
     field.append("<option value>---------</option>");
     for (var choice of choices) {
       $(`<option value="${choice}">${choice}</option>`).appendTo(field);
+    }
+    if (value !== undefined) {
+      field.val(value);
     }
   }
 
@@ -16,7 +19,7 @@ $(function() {
   }
 
   function initState(fields, values) {
-    fields[0].val(values[0]);
+    createOptions(fields[0], industryChoices, values[0]);
     updateSpecify(fields[0], fields[1]);
   }
 
@@ -38,7 +41,6 @@ $(function() {
   selectField.replaceWith(`<select name="${name}_0" class="form-control" title id="${id}_0"></select>`);
   selectField = $(`#${id}_0`);
   var fields = [selectField, specifyField];
-  createOptions(selectField, industryChoices);
   selectField.change(function() {
     updateState(fields, values);
   });
