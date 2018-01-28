@@ -1,5 +1,6 @@
 {% extends "contacts/base.html" %}
 {% load bootstrap4 %}
+{% load contacts %}
 
 {% block style %}
 {{ block.super }}
@@ -32,13 +33,13 @@
   <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">电子邮箱</label><div class="col-8 col-sm-10"><input type="text" readonly {% if not profile.email %}disabled{% endif %} class="form-control-plaintext" value="{{ profile.email|default:"（空）" }}"></div></div>
   <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">微信号</label><div class="col-8 col-sm-10"><input type="text" readonly {% if not profile.wechat %}disabled{% endif %} class="form-control-plaintext" value="{{ profile.wechat|default:"（空）" }}"></div></div>
   <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">固定电话</label><div class="col-8 col-sm-10"><input type="text" readonly {% if not profile.telephone %}disabled{% endif %} class="form-control-plaintext" value="{{ profile.telephone|default:"（空）" }}"></div></div>
-  <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">所在地区</label><div class="col-8 col-sm-10"><input type="text" readonly {% if not profile.location %}disabled{% endif %} class="form-control-plaintext" value="{{ profile.location|default:"（空）" }}"></div></div>
+  <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">所在地区</label><div class="col-8 col-sm-10"><input type="text" readonly {% if not profile.location %}disabled{% endif %} class="form-control-plaintext" value="{{ profile.location|compact|default:"（空）" }}"></div></div>
   <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">通讯地址</label><div class="col-8 col-sm-10"><input type="text" readonly {% if not profile.address %}disabled{% endif %} class="form-control-plaintext" value="{{ profile.address|default:"（空）" }}"></div></div>
   <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">邮编</label><div class="col-8 col-sm-10"><input type="text" readonly {% if not profile.postcode %}disabled{% endif %} class="form-control-plaintext" value="{{ profile.postcode|default:"（空）" }}"></div></div>
   <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">备注</label><div class="col-8 col-sm-10"><input type="text" readonly {% if not profile.remark %}disabled{% endif %} class="form-control-plaintext" value="{{ profile.remark|default:"（空）" }}"></div></div>
   <h2>秩年与校友服务信息</h2>
   <div class="form-group row"><label class="col-4 col-sm-4 col-form-label">是否参加秩年校庆活动</label><div class="col-8 col-sm-8"><input type="text" readonly {% if extra.attend is None %}disabled{% endif %} class="form-control-plaintext" value="{{ extra.attend|yesno:"是,否,（未填）" }}"></div></div>
-  <div class="form-group row"><label class="col-4 col-sm-4 col-form-label">申请校友邮箱</label><div class="col-8 col-sm-8"><input type="text" readonly {% if not extra.email_prefix %}disabled{% endif %} class="form-control-plaintext" value="{% if extra.email_prefix %}{{ extra.email_prefix }}04@tsinghua.org.cn{% else %}（未申请）{% endif %}"></div></div>
+  <div class="form-group row"><label class="col-4 col-sm-4 col-form-label">申请校友邮箱</label><div class="col-8 col-sm-8"><input type="text" readonly {% if not extra.email_prefix %}disabled{% endif %} class="form-control-plaintext" value="{{ extra.email_prefix|complete|default:"（未申请）" }}"></div></div>
   {% if extra.photo %}
   <div class="form-group"><label class="col-form-label">校友卡证件照</label></div>
   <div class="form-group"><img src="{{ extra.photo.url }}" class="img-fluid rounded" alt="{{ profile.name }}"></div>
