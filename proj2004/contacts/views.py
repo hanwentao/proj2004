@@ -5,8 +5,9 @@ from django.shortcuts import (
     redirect,
     render,
 )
-from django.contrib.auth.models import User
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 from .forms import (
     ProfileForm,
@@ -21,7 +22,20 @@ def home(request):
     }
     return render(request, 'contacts/home.html', context)
 
+@login_required
 def profile(request, username):
+    user = get_object_or_404(User, username=username)
+    profile = user.profile
+    extra = user.extra
+    context = {
+        'page': 'profile',
+        'edit': False,
+        'profile': profile,
+        'extra': extra,
+    }
+    return render(request, 'contacts/profile.html', context)
+
+def profile_edit(request, username):
     user = get_object_or_404(User, username=username)
     password_set = user.has_usable_password()
     profile = user.profile
@@ -61,6 +75,7 @@ def profile(request, username):
         set_password_form = SetPasswordForm(user)
     context = {
         'page': 'profile',
+        'edit': True,
         'profile': profile,
         'extra': extra,
         'profile_form': profile_form,
