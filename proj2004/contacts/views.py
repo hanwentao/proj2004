@@ -24,6 +24,8 @@ def home(request):
 
 @login_required
 def profile(request, username):
+    if not request.user.is_superuser and username != request.user.username:
+        return HttpResponseForbidden('你不能访问其他人的个人信息。')
     user = get_object_or_404(User, username=username)
     profile = user.profile
     extra = user.extra
@@ -44,7 +46,6 @@ def profile_edit(request, username):
             if not request.user.is_authenticated:
                 return redirect(f'{settings.LOGIN_URL}?next={request.path}')
             if username != request.user.username:
-                print(username, repr(request.user.username))
                 return HttpResponseForbidden('你不能访问其他人的个人信息。')
         else:
             code = request.GET.get('code', '')
