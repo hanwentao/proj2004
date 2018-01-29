@@ -2,16 +2,16 @@ $(function() {
   function createOptions(field, choices, value) {
     field.append("<option value>---------</option>");
     for (var choice of choices) {
-      $(`<option value="${choice}">${choice}</option>`).appendTo(field);
+      field.append(`<option value="${choice}">${choice}</option>`);
     }
-    if (value !== undefined) {
+    if (value != undefined) {
       field.val(value);
     }
   }
 
   function updateSpecify(masterField, slaveField) {
     var masterValue = masterField.val();
-    if (masterValue == "其他" || masterValue == "Other") {
+    if (masterValue === "其他" || masterValue === "Other") {
       slaveField.show();
     } else {
       slaveField.hide();
