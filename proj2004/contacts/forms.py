@@ -84,6 +84,7 @@ class LocationWidget(forms.widgets.MultiWidget):
             forms.widgets.TextInput(attrs=attrs),
             forms.widgets.TextInput(attrs=attrs),
             forms.widgets.TextInput(attrs=attrs),
+            forms.widgets.TextInput(attrs=attrs),
         )
         super().__init__(widgets, attrs)
 
@@ -91,7 +92,7 @@ class LocationWidget(forms.widgets.MultiWidget):
         if value:
             values = value.split('|')
         else:
-            values = ['', '', '']
+            values = ['', '', '', '']
         return values
 
     class Media:
@@ -111,11 +112,13 @@ class LocationField(forms.MultiValueField):
             forms.CharField(required=False),
             forms.CharField(required=False),
             forms.CharField(required=False),
+            forms.CharField(required=False),
         )
         super().__init__(error_messages=error_messages, fields=fields, require_all_fields=False, widget=LocationWidget, **kwargs)
 
     def compress(self, data_list):
-        return '|'.join(data_list)
+        filtered = [x for x in data_list if x != '其他' and x != 'Other']
+        return '|'.join(filtered)
 
 
 class ProfileForm(forms.ModelForm):
