@@ -32,7 +32,7 @@ class Profile(models.Model):
     location = models.CharField('所在地区', max_length=100, blank=True)
     address = models.CharField('通讯地址', max_length=250, blank=True, help_text='请填写完整、规范的通讯地址。如在国外，可使用外文地址。')
     postcode = models.CharField('邮编', max_length=100, blank=True)
-    remark = models.CharField('备注', max_length=250, blank=True, help_text='如果以上内容有特殊情况的，可在备注栏中说明。例如：学籍信息有误；有多个手机号、邮箱；有多个常住地等。')
+    remark = models.CharField('备注', max_length=250, blank=True, help_text='如果以上内容有特殊情况的，可在备注栏中说明。例如：学籍信息有误；有转系情况；有多个手机号、邮箱；有多个常住地等。')
 
     @property
     def verification_code(self):
@@ -60,13 +60,13 @@ def get_photo_upload_path(instance, filename):
 
 class Extra(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    attend = models.NullBooleanField('是否参加秩年校庆活动', help_text='全校秩年校庆活动安排在2018年4月29日。')
+    attend = models.NullBooleanField('是否参加秩年校庆活动', help_text='全校秩年校庆活动安排在2018年4月29日，欢迎各位返校参与。')
     email_prefix = models.CharField('校友邮箱用户名前缀', max_length=32, unique=True, blank=True, null=True,
         validators=[RegexValidator(r'^[A-Za-z][A-Za-z_-]*[A-Za-z]$', '邮箱用户名前缀不合法。')],
         help_text='如果要开通 @tsinghua.org.cn 校友邮箱，请填写想要的用户名前缀。用户名前缀的合法字符包括英文字母、减号和下划线。英文字母不区分大小写，用户名将自动加入 04 作为后缀。')
     photo = ProcessedImageField(
         verbose_name='校友卡证件照', blank=True, upload_to=get_photo_upload_path,
-        help_text='如要要办理校友卡，请上传证件照。',
+        help_text='如要要办理校友卡，请上传证件照。要求为近期免冠彩色照，白底，竖版。上传后系统将自动把照片调整为400×500的尺寸。',
         processors=[ResizeToFill(400, 500)],
         format='JPEG',
         options={'quality': 95},
