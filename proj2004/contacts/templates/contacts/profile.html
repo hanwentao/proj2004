@@ -62,6 +62,7 @@
 {%     endif %}
 {%     if not user.has_usable_password %}
     <h2>安全信息</h2>
+    <div class="alert alert-warning" role="alert">设置密码后，本邀请链接将失效。你可以登录本网站来查看和修改个人信息，用户名为本科学号。</div>
     {% bootstrap_form set_password_form %}
 {%     endif %}
     {% buttons %}
