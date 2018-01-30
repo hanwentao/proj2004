@@ -3,6 +3,7 @@ import csv
 import sys
 
 from django.core.management.base import BaseCommand, CommandError
+from django.conf import settings
 
 from ...models import Profile
 
@@ -52,7 +53,7 @@ class Command(BaseCommand):
                 profile.postcode,
                 '',
                 '',
-            ] + ([profile.get_absolute_url() + '?code=' + profile.verification_code] if with_url else []))
+            ] + ([settings.BASE_URL + profile.get_absolute_url() + 'edit/?code=' + profile.verification_code] if with_url else []))
             num_alumni += 1
             if out != sys.stdout and num_alumni % 100 == 0:
                 self.stdout.write(f'Export... {num_alumni} written.')
