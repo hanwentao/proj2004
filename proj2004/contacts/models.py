@@ -62,7 +62,11 @@ class Profile(models.Model):
 
 def get_photo_upload_path(instance, filename):
     profile = instance.user.profile
-    return f'uploads/{profile.clazz}/{profile.name}/{profile.student_id}.jpg'
+    if profile.clazz:
+        path = f'uploads/{profile.department}/{profile.clazz}/{profile.student_id}.jpg'
+    else:
+        path = f'uploads/{profile.department}/{profile.student_id}.jpg'
+    return path
 
 
 class Extra(models.Model):
