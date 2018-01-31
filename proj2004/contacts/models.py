@@ -13,9 +13,16 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 class Profile(models.Model):
 
+    GENDER_CHOICES = (
+        ('M', '男'),
+        ('F', '女'),
+    )
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     student_id = models.CharField('学号', max_length=10)
     name = models.CharField('姓名', max_length=100)
+    gender = models.CharField('性别', max_length=1, choices=GENDER_CHOICES)
+    dob = models.DateField('出生日期', null=True)
     enroll_year = models.IntegerField('入学年份', default=2004)
     graduate_year = models.IntegerField('毕业年份', default=2008)
     department = models.CharField('院系', max_length=100)
