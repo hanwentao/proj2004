@@ -7,6 +7,18 @@ from django.conf import settings
 
 from ...models import Profile
 
+def smart_join(*args):
+    if not args:
+        return ''
+    last = args[0]
+    result = last
+    for curr in args[1:]:
+        if last:
+            result += ' '
+        result += curr
+        last = curr
+    return result
+
 
 class Command(BaseCommand):
     help = 'Export alumni data.'
@@ -14,7 +26,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('-W', '--without-header', action='store_true', help='Specifies that output has no header row.')
         parser.add_argument('-u', '--with-url', action='store_true', help='Specifies that output has url column.')
-        parser.add_argument('-o', '--output', type=argparse.FileType('w'), help='Outputs to file.')
+        parser.add_argument('-o', '--output', type=argparse.FileType('w', encoding='utf-8'), help='Outputs to file.')
 
     def handle(self, *args, **options):
         with_header = not options['without_header']
@@ -42,7 +54,7 @@ class Command(BaseCommand):
                 profile.department,
                 profile.major,
                 profile.clazz,
-                ' '.join((profile.organization, profile.position, profile.title)),
+                smart_join(profile.organization, profile.position, profile.title),
                 profile.industry,
                 profile.mobile,
                 profile.telephone,
