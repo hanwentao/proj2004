@@ -34,15 +34,15 @@ class Command(BaseCommand):
         for profile in Profile.objects.order_by('student_id'):
             writer.writerow([
                 profile.name,
-                '',
-                '',
+                '男' if profile.gender == 'M' else '女',
+                profile.dob.strftime('%Y%m%d') if profile.dob is not None else '',
                 profile.student_id,
                 profile.enroll_year,
                 profile.graduate_year,
                 profile.department,
                 profile.major,
                 profile.clazz,
-                profile.organization + ' ' + profile.position + ' ' + profile.title,
+                ' '.join((profile.organization, profile.position, profile.title)),
                 profile.industry,
                 profile.mobile,
                 profile.telephone,
