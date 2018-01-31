@@ -2,4 +2,5 @@ Django~=2.0
 Pillow~=5.0
 django-bootstrap4~=0.0
 django-imagekit~=4.0
+openpyxl~=2.5
 git+https://github.com/hanwentao/django-phonenumber-field.git
