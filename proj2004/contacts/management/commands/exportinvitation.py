@@ -1,3 +1,4 @@
+import os
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 from django.db import connection
@@ -12,33 +13,17 @@ class Command(BaseCommand):
     help = 'Export invitation in Excel.'
 
     def add_arguments(self, parser):
-        parser.add_argument('-p', '--prefix', help='Specifies prefix of output files.')
-        parser.add_argument('-d', '--department', action='store_true', help='Exports by departments.')
-        parser.add_argument('-c', '--class', action='store_true', help='Exports by classes.')
+        parser.add_argument('-p', '--path', default='.', help='Specifies path of output files.')
 
     def handle(self, *args, **options):
-        prefix = options['prefix']
-        by_department = options['department']
-        by_class = options['class']
-        if not by_department and not by_class:
-            raise CommandError('Must specify either by deparment or by class')
-        if by_department and by_class:
-            raise CommandError('Cannot specify both by department and by class')
+        path = options['path']
         with connection.cursor() as cursor:
-            if by_department:
-                cursor.execute('SELECT DISTINCT department FROM contacts_profile')
-            else:
-                cursor.execute('SELECT DISTINCT clazz FROM contacts_profile')
+            cursor.execute('SELECT DISTINCT department, clazz FROM contacts_profile')
             groups = cursor.fetchall()
-        groups = [g[0] for g in groups]
-        prefix = '' if prefix is None else prefix
-        for group in groups:
-            name = '空' if not group else group
-            if not prefix or prefix.endswith('/'):
-                path = f'{prefix}{name}.xlsx'
-            else:
-                path = f'{prefix}-{name}.xlsx'
-            print(f'Generating {path}...')
+        for department, clazz in groups:
+            name = '空' if not clazz else clazz
+            xlsx_path = f'{path}/{department}/{name}.xlsx'
+            print(f'Generating {xlsx_path}...')
             wb = Workbook()
             ws = wb.active
             ws.title = '名单'
@@ -54,10 +39,7 @@ class Command(BaseCommand):
             ws.column_dimensions[get_column_letter(3)].width = 20
             ws.column_dimensions[get_column_letter(4)].width = 10
             ws.column_dimensions[get_column_letter(5)].width = 60
-            if by_department:
-                alumni = Profile.objects.filter(department=group)
-            else:
-                alumni = Profile.objects.filter(clazz=group)
+            alumni = Profile.objects.filter(clazz=clazz)
             for i, alumnus in enumerate(alumni):
                 ws.append([
                     alumnus.student_id,
@@ -66,4 +48,5 @@ class Command(BaseCommand):
                     alumnus.clazz,
                     settings.BASE_URL + alumnus.get_absolute_url() + 'edit/?code=' + alumnus.verification_code,
                 ])
-            wb.save(path)
+            os.makedirs(os.path.dirname(xlsx_path), exist_ok=True)
+            wb.save(xlsx_path)
