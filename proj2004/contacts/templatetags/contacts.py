@@ -16,6 +16,7 @@ def compact(value):
     components = [c for c in components if c]
     if len(components) > 0 and components[0].endswith('洲'):
         del components[0]
+    components = [x for x in components if x != '其他' and x != 'Other']
     if not components:
         return ''
     last = components[0]
