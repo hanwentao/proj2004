@@ -6,9 +6,13 @@ from django.shortcuts import (
     render,
 )
 from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import (
+    login_required,
+    user_passes_test,
+)
 from django.contrib.auth.models import User
 
+from .models import Profile
 from .forms import (
     ProfileForm,
     ExtraForm,
@@ -84,3 +88,21 @@ def profile_edit(request, username):
         'set_password_form': set_password_form,
     }
     return render(request, 'contacts/profile.html', context)
+
+@user_passes_test(lambda user: user.is_superuser)
+def clazz_list(request, clazz):
+    profiles = Profile.objects.filter(clazz=clazz)
+    context = {
+        'name': clazz,
+        'profiles': profiles,
+    }
+    return render(request, 'contacts/list.html', context)
+
+@user_passes_test(lambda user: user.is_superuser)
+def department_list(request, department):
+    profiles = Profile.objects.filter(department=department)
+    context = {
+        'name': department,
+        'profiles': profiles,
+    }
+    return render(request, 'contacts/list.html', context)
