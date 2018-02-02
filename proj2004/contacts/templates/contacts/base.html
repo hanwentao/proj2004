@@ -2,9 +2,9 @@
 
 {% block body %}
 <header>
-  <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
+  <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top" role="navigation">
     <div class="container">
-      <a class="navbar-brand" href="#">清华四字班秩年</a>
+      <span class="navbar-brand mb-0 h1">清华四字班秩年</span>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-main" aria-controls="navbar-main" aria-expanded="false" aria-label="开关导航栏">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -19,7 +19,7 @@
             <a class="nav-link" href="{% url 'home' %}">首页</a>
           </li>
           {% endif %}
-          {% if user.is_authenticated %}
+          {% if user.is_authenticated and user.profile %}
           {%   if page == 'profile' %}
           <li class="nav-item active">
             <a class="nav-link" href="#">个人信息<span class="sr-only">（当前页）</span></a>
@@ -30,13 +30,26 @@
           </li>
           {%   endif %}
           {% endif %}
+          {% if user.is_staff or user.is_superuser %}
+          {%   if page == 'list' %}
+          <li class="nav-item active">
+            <a class="nav-link" href="#">统计信息<span class="sr-only">（当前页）</span></a>
+          </li>
+          {%   else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'department_list' %}">统计信息</a>
+          </li>
+          {%   endif %}
+          {% endif %}
         </ul>
-        {% if user.is_authenticated %}
-        <span class="navbar-text">你好，{% if user.is_superuser %}管理员{% else %}{{ user.profile.name }}{% endif %}！</span>
-        <span class="navbar-text"><a href="{% url 'logout' %}">注销</a></span>
-        {% else %}
-        <span class="navbar-text"><a href="{% url 'login' %}">登录</a></span>
-        {% endif %}
+        <form class="form-inline">
+          {% if user.is_authenticated %}
+          <span class="navbar-text text-light mr-2">你好，{{ profile.name }}{% if user.is_superuser %}（管理员）{% endif %}！</span>
+          <a href="{% url 'logout' %}" class="btn btn-outline-light">注销</a>
+          {% else %}
+          <a href="{% url 'login' %}" class="btn btn-outline-light">登录</a>
+          {% endif %}
+        </form>
       </div>
     </div>
   </nav>

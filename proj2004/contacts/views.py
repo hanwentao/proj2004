@@ -93,6 +93,7 @@ def profile_edit(request, username):
 def clazz_list(request, clazz):
     profiles = Profile.objects.filter(clazz=clazz)
     context = {
+        'page': 'list',
         'name': clazz,
         'profiles': profiles,
     }
@@ -102,6 +103,7 @@ def clazz_list(request, clazz):
 def department_list(request, department):
     profiles = Profile.objects.filter(department=department)
     context = {
+        'page': 'list',
         'name': department,
         'profiles': profiles,
     }
