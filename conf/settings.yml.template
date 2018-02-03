@@ -1,12 +1,13 @@
-base_url: http://127.0.0.1:8000
-secret_key: '<secret key>'
-allowed_hosts:
+BASE_URL: http://127.0.0.1:8000
+SECRET_KEY: '<secret key>'
+ALLOWED_HOSTS:
   - '*'
-db:
-  ENGINE: django.db.backends.mysql
-  HOST: db
-  NAME: proj2004
-  USER: root
-  PASSWORD: 'password'
-  OPTIONS:
-    init_command: "SET sql_mode='STRICT_TRANS_TABLES'"
+DATABASES:
+  default:
+    ENGINE: django.db.backends.mysql
+    HOST: db
+    NAME: proj2004
+    USER: root
+    PASSWORD: 'password'
+    OPTIONS:
+      init_command: "SET sql_mode='STRICT_TRANS_TABLES'"
