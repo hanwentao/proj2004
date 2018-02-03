@@ -100,11 +100,14 @@ def clazz_list(request, clazz):
     return render(request, 'contacts/list.html', context)
 
 @user_passes_test(lambda user: user.is_superuser)
-def department_list(request, department):
-    profiles = Profile.objects.filter(department=department)
+def department_list(request, department=None):
+    if department:
+        profiles = Profile.objects.filter(department=department)
+    else:
+        profiles = Profile.objects.all()
     context = {
         'page': 'list',
-        'name': department,
+        'name': department if department else '全部',
         'profiles': profiles,
     }
     return render(request, 'contacts/list.html', context)
