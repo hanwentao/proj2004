@@ -44,7 +44,7 @@
         </ul>
         <form class="form-inline">
           {% if user.is_authenticated %}
-          <span class="navbar-text text-light mr-2">你好，{{ profile.name }}{% if user.is_superuser %}（管理员）{% endif %}！</span>
+          <span class="navbar-text text-light mr-2">你好，{{ user.profile.name }}{% if user.is_superuser %}（管理员）{% endif %}！</span>
           <a href="{% url 'logout' %}" class="btn btn-outline-light">注销</a>
           {% else %}
           <a href="{% url 'login' %}" class="btn btn-outline-light">登录</a>
