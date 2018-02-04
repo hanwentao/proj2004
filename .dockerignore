@@ -18,4 +18,5 @@ env/
 
 # Application configuration and data
 conf/
+misc/
 data/

@@ -2,5 +2,6 @@
 /.vscode/
 /env/
 __pycache__/
+/misc/
 /data/
 /conf/settings.yml
