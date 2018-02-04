@@ -25,7 +25,7 @@ urlpatterns = [
 ]
 
 # Serve uploaded files for development mode
-if settings.DEBUG:
+if settings.MODE == 'develop':
     urlpatterns += [
         path(settings.MEDIA_URL[1:] + '<path:path>', static.serve, {'document_root': settings.MEDIA_ROOT}),
     ]

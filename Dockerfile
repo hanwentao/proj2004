@@ -9,3 +9,4 @@ RUN pip install -r requirements-deploy.txt
 ADD . .
 RUN ./manage.py collectstatic --noinput
 VOLUME /var/www
+CMD ["uwsgi", "uwsgi.ini"]

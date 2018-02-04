@@ -3,7 +3,6 @@ version: '3'
 services:
   web:
     build: .
-    command: uwsgi --socket :8000 --wsgi-file proj2004/wsgi.py
     volumes:
       - .:/opt/code
       - ./data/media:/var/www/media

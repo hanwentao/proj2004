@@ -2,6 +2,7 @@ import yaml
 
 from . import *
 
+MODE = 'deploy'
 DEBUG = False
 WWW_ROOT = '/var/www'
 STATIC_ROOT = os.path.join(WWW_ROOT, 'static')
