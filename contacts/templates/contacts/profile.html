@@ -1,4 +1,5 @@
 {% extends "contacts/base.html" %}
+{% load static %}
 {% load bootstrap4 %}
 {% load contacts %}
 
@@ -10,6 +11,7 @@
 {% block script %}
 {{ block.super }}
 {{ profile_form.media.js }}
+<script src="{% static 'js/validate-form.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -23,7 +25,7 @@
   <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">专业</label><div class="col-8 col-sm-10"><input type="text" readonly class="form-control-plaintext" value="{{ profile.major }}"></div></div>
   <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">入学年份</label><div class="col-8 col-sm-10"><input type="text" readonly class="form-control-plaintext" value="{{ profile.enroll_year }}"></div></div>
   <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">毕业年份</label><div class="col-8 col-sm-10"><input type="text" readonly class="form-control-plaintext" value="{{ profile.graduate_year }}"></div></div>
-{%   if not edit %}
+  {% if not edit %}
   <h2>职业与通讯信息</h2>
   <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">所在行业</label><div class="col-8 col-sm-10"><input type="text" readonly {% if not profile.industry %}disabled{% endif %} class="form-control-plaintext" value="{{ profile.industry|default:"（空）" }}"></div></div>
   <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">工作单位</label><div class="col-8 col-sm-10"><input type="text" readonly {% if not profile.organization %}disabled{% endif %} class="form-control-plaintext" value="{{ profile.organization|default:"（空）" }}"></div></div>
@@ -40,36 +42,36 @@
   <h2>秩年与校友服务信息</h2>
   <div class="form-group row"><label class="col-4 col-sm-4 col-form-label">是否参加秩年校庆活动</label><div class="col-8 col-sm-8"><input type="text" readonly {% if extra.attend is None %}disabled{% endif %} class="form-control-plaintext" value="{{ extra.attend|yesno:"是,否,（未填）" }}"></div></div>
   <div class="form-group row"><label class="col-4 col-sm-4 col-form-label">申请校友邮箱</label><div class="col-8 col-sm-8"><input type="text" readonly {% if not extra.email_prefix %}disabled{% endif %} class="form-control-plaintext" value="{{ extra.email_prefix|complete|default:"（未申请）" }}"></div></div>
-{%     if extra.photo %}
+  {%   if extra.photo %}
   <div class="form-group"><label class="col-form-label">校友卡证件照</label></div>
   <div class="form-group"><img src="{{ extra.photo.url }}" class="img-fluid rounded" alt="{{ profile.name }}"></div>
-{%     else %}
+  {%   else %}
   <div class="form-group row"><label class="col-4 col-sm-4 col-form-label">申请校友卡</label><div class="col-8 col-sm-8"><input type="text" readonly disabled class="form-control-plaintext" value="（未申请）"></div></div>
-{%     endif %}
+  {%   endif %}
   {% buttons %}
   <a href="edit/" class="btn btn-primary">修改</a>
   {% endbuttons %}
-{%   else %}
-  <form enctype="multipart/form-data" action="" method="post">
+  {% else %}
+  <form id="profile-form" enctype="multipart/form-data" action="" method="post">
     {% csrf_token %}
     <div class="alert alert-info" role="alert">请填写以下信息。这些信息均为可选填内容，数据将严格保存，仅用于年级内信息交换及校友总会统计校友信息之用。</div>
     <h2>职业与通讯信息</h2>
     {% bootstrap_form profile_form %}
     <h2>秩年与校友服务信息</h2>
     {% bootstrap_form extra_form %}
-{%     if extra.photo %}
+    {% if extra.photo %}
     <div class="form-group"><img src="{{ extra.photo.url }}" class="img-fluid rounded" alt="{{ profile.name }}"></div>
-{%     endif %}
-{%     if not user.has_usable_password %}
+    {% endif %}
+    {% if not user.has_usable_password %}
     <h2>安全信息</h2>
     <div class="alert alert-warning" role="alert">设置密码后，本邀请链接将失效。你可以登录本网站来查看和修改个人信息，用户名为本科学号。</div>
     {% bootstrap_form set_password_form %}
-{%     endif %}
+    {% endif %}
     {% buttons %}
     <button type="submit" class="btn btn-primary">提交</button>
     <a href="../" class="btn btn-secondary">放弃</a>
     {% endbuttons %}
   </form>
-{%   endif %}
+  {% endif %}
 </main>
 {% endblock %}
