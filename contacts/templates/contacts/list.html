@@ -53,7 +53,7 @@
         <th>姓名</th>
         <th>院系</th>
         <th>班级</th>
-        <th>是否登录</th>
+        <th>最近登录时间</th>
       </tr>
     </thead>
     <tbody>
@@ -71,9 +71,9 @@
         </td>
         <td>
           {% if profile.user.last_login %}
-          <span class="text-success">是</span>
+          <span class="text-info">{{ profile.user.last_login|date:"Y-m-d H:i:s" }}</span>
           {% else %}
-          <span class="text-danger">否</span>
+          <span class="text-warning">尚未登录</span>
           {% endif %}
         </td>
       </tr>
