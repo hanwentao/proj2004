@@ -3,5 +3,5 @@ Pillow~=5.0.0
 django-bootstrap4~=0.0.5
 django-imagekit~=4.0.2
 openpyxl~=2.5.0
-
-django-debug-toolbar==1.9.1
+# Use own repo for Chinese translation
+git+https://github.com/hanwentao/django-phonenumber-field.git
