@@ -2,11 +2,8 @@ import yaml
 
 from .common import *
 
-MODE = 'deploy'
 DEBUG = False
 WWW_ROOT = '/var/www'
-STATIC_ROOT = os.path.join(WWW_ROOT, 'static')
-MEDIA_ROOT = os.path.join(WWW_ROOT, 'media')
 
 CONF_DIR = os.path.join(BASE_DIR, 'conf')
 try:
@@ -17,3 +14,8 @@ try:
 except FileNotFoundError:
     pass
 del yaml
+
+if 'STATIC_ROOT' not in globals():
+    STATIC_ROOT = os.path.join(WWW_ROOT, 'static')
+if 'MEDIA_ROOT' not in globals():
+    MEDIA_ROOT = os.path.join(WWW_ROOT, 'media')

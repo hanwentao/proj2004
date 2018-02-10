@@ -1,8 +1,8 @@
-MODE: deploy
 BASE_URL: http://127.0.0.1:8000
 SECRET_KEY: '<secret key>'
 ALLOWED_HOSTS:
   - '*'
+WWW_ROOT: /var/www
 DATABASES:
   default:
     ENGINE: django.db.backends.mysql
