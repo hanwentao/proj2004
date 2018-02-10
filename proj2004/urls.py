@@ -26,6 +26,10 @@ urlpatterns = [
 
 # Serve uploaded files for development mode
 if settings.MODE == 'develop':
-    urlpatterns += [
-        path(settings.MEDIA_URL[1:] + '<path:path>', static.serve, {'document_root': settings.MEDIA_ROOT}),
-    ]
+    urlpatterns.append(path(settings.MEDIA_URL[1:] + '<path:path>',
+        static.serve, {'document_root': settings.MEDIA_ROOT}))
+
+# For debug toolbar
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns.insert(0, path('__debug__/', include(debug_toolbar.urls)))

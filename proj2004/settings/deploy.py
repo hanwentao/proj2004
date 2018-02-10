@@ -1,6 +1,6 @@
 import yaml
 
-from . import *
+from .common import *
 
 MODE = 'deploy'
 DEBUG = False
