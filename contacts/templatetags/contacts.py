@@ -33,3 +33,12 @@ def complete(value):
     if not value:
         return value
     return value + '04@tsinghua.org.cn'
+
+@register.filter
+def gender(value):
+    if value == 'M':
+        return '男'
+    elif value == 'F':
+        return '女'
+    else:
+        return value

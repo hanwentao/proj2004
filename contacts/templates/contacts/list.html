@@ -1,5 +1,6 @@
 {% extends "contacts/base.html" %}
 {% load static %}
+{% load contacts %}
 
 {% block style %}
 {{ block.super }}
@@ -51,6 +52,7 @@
       <tr>
         <th>学号</th>
         <th>姓名</th>
+        <th>性别</th>
         <th>院系</th>
         <th>班级</th>
         <th>最近登录时间</th>
@@ -61,6 +63,7 @@
       <tr>
         <td><a href="{% url 'profile' profile.student_id %}">{{ profile.student_id }}</a></td>
         <td><a href="{% url 'profile' profile.student_id %}">{{ profile.name }}</a></td>
+        <td>{{ profile.gender|gender }}</td>
         <td><a href="{% url 'department_list' profile.department %}">{{ profile.department }}</a></td>
         <td>
           {% if profile.clazz %}
