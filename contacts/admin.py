@@ -26,6 +26,8 @@ class ProfileAdmin(admin.ModelAdmin):
         'student_id',
         'name',
         'major',
+        'clazzes__name',
+        'clazzes__department__name',
     ]
 
 admin.site.register(Department, DepartmentAdmin)
