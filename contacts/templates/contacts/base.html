@@ -33,7 +33,10 @@
         </ul>
         <form class="form-inline">
           {% if user.is_authenticated %}
-          <span class="navbar-text text-light mr-2">你好，{{ user.profile.name }}{% if user.is_superuser %}（管理员）{% endif %}！</span>
+          <span class="navbar-text text-light mr-2">{{ user.profile.name|default:"管理员" }}</span>
+          {% if user.is_superuser or user.is_staff %}
+          <a href="{% url 'admin:index' %}" class="btn btn-outline-danger mr-2">管理</a>
+          {% endif %}
           <a href="{% url 'logout' %}" class="btn btn-outline-light">注销</a>
           {% else %}
           <a href="{% url 'login' %}" class="btn btn-outline-light">登录</a>
