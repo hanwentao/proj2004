@@ -10,30 +10,39 @@
       </button>
       <div class="collapse navbar-collapse" id="navbar-main">
         <ul class="navbar-nav mr-auto">
-          {% if page == 'home' %}
-          <li class="nav-item active">
-            <a class="nav-link" href="#">首页<span class="sr-only">（当前页）</span></a>
-          </li>
-          {% else %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'home' %}">首页</a>
+            <a
+              {% if nav.0 == 'home' %}
+              class="nav-link active" href="#"
+              {% else %}
+              class="nav-link" href="{% url 'home' %}"
+              {% endif %}
+            >首页</a>
+          </li>
+          {% if user.is_authenticated and user.profile %}
+          <li class="nav-item">
+            <a
+              {% if nav.0 == 'profile' and nav.1 == user.username %}
+              class="nav-link active" href="#"
+              {% else %}
+              class="nav-link" href="{% url 'profile' user.username %}"
+              {% endif %}
+            >个人信息</a>
           </li>
           {% endif %}
-          {% if user.is_authenticated and user.profile %}
-          {%   if page == 'profile' %}
-          <li class="nav-item active">
-            <a class="nav-link" href="#">个人信息<span class="sr-only">（当前页）</span></a>
+          {% if user.department_set or user.clazz_set %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">统计信息</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item disabled" href="#">计40</a>
+              <a class="dropdown-item" href="#">计44</a>
+            </div>
           </li>
-          {%   else %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'profile' user.username %}">个人信息</a>
-          </li>
-          {%   endif %}
           {% endif %}
         </ul>
         <form class="form-inline">
           {% if user.is_authenticated %}
-          <span class="navbar-text text-light mr-2">{{ user.profile.name|default:"管理员" }}</span>
+          <span class="navbar-text text-secondary mr-2">{{ user.profile.name|default:"管理员" }}</span>
           {% if user.is_superuser or user.is_staff %}
           <a href="{% url 'admin:index' %}" class="btn btn-outline-danger mr-2">管理</a>
           {% endif %}

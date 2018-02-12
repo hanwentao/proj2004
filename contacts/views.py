@@ -23,7 +23,7 @@ from .forms import (
 
 def home(request):
     context = {
-        'page': 'home',
+        'nav': ('home',),
     }
     return render(request, 'contacts/home.html', context)
 
@@ -36,7 +36,7 @@ def profile(request, username):
     profile = obj.profile
     extra = obj.extra
     context = {
-        'page': 'profile',
+        'nav': ('profile', username),
         'edit': False,
         'change_button': username == user.username,
         'profile': profile,
@@ -82,7 +82,7 @@ def profile_edit(request, username):
     if not request.user.is_superuser and set_password_form is None:
         set_password_form = SetPasswordForm(user)
     context = {
-        'page': 'profile',
+        'nav': ('profile', username),
         'edit': True,
         'profile': profile,
         'extra': extra,
@@ -103,7 +103,7 @@ def class_list(request, id_or_name):
         return HttpResponseForbidden('无权访问该班级页面。')
     profiles = class_.profile_set.all()
     context = {
-        'page': 'list',
+        'nav': ('list', class_.name),
         'name': class_.name,
         'profiles': profiles,
     }
@@ -127,7 +127,7 @@ def department_list(request, id_or_code_or_name):
     profiles = list(profiles)
     profiles.sort(key=lambda p: p.student_id)
     context = {
-        'page': 'list',
+        'nav': ('list', department.name),
         'name': department.name,
         'profiles': profiles,
     }

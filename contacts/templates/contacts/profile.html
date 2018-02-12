@@ -48,9 +48,9 @@
   {%   else %}
   <div class="form-group row"><label class="col-4 col-sm-4 col-form-label">申请校友卡</label><div class="col-8 col-sm-8"><input type="text" readonly disabled class="form-control-plaintext" value="（未申请）"></div></div>
   {%   endif %}
-  {% buttons %}
+  {%   if change_button %}
   <a href="edit/" class="btn btn-primary">修改</a>
-  {% endbuttons %}
+  {%   endif %}
   {% else %}
   <form id="profile-form" enctype="multipart/form-data" action="" method="post">
     {% csrf_token %}
