@@ -6,19 +6,20 @@ from django.shortcuts import (
     render,
 )
 from django.contrib.auth import login
-from django.contrib.auth.decorators import (
-    login_required,
-    user_passes_test,
-)
-from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
 
-from .models import Profile
+from .models import (
+    Department,
+    Clazz,
+    Profile,
+    check_permission,
+)
 from .forms import (
     ProfileForm,
     ExtraForm,
     SetPasswordForm,
 )
-
 
 def home(request):
     context = {
@@ -28,21 +29,23 @@ def home(request):
 
 @login_required
 def profile(request, username):
-    if not request.user.is_superuser and username != request.user.username:
-        return HttpResponseForbidden('你不能访问其他人的个人信息。')
-    user = get_object_or_404(User, username=username)
-    profile = user.profile
-    extra = user.extra
+    obj = get_object_or_404(get_user_model(), username=username)
+    user = request.user
+    if not check_permission(user, obj):
+        return HttpResponseForbidden('无权访问该校友的信息。')
+    profile = obj.profile
+    extra = obj.extra
     context = {
         'page': 'profile',
         'edit': False,
+        'change_button': username == user.username,
         'profile': profile,
         'extra': extra,
     }
     return render(request, 'contacts/profile.html', context)
 
 def profile_edit(request, username):
-    user = get_object_or_404(User, username=username)
+    user = get_object_or_404(get_user_model(), username=username)
     password_set = user.has_usable_password()
     profile = user.profile
     if not request.user.is_superuser:
@@ -89,25 +92,43 @@ def profile_edit(request, username):
     }
     return render(request, 'contacts/profile.html', context)
 
-@user_passes_test(lambda user: user.is_superuser)
-def clazz_list(request, clazz):
-    profiles = Profile.objects.filter(clazz=clazz)
+@login_required
+def class_list(request, id_or_name):
+    if isinstance(id_or_name, int):
+        class_ = get_object_or_404(Clazz, id=id_or_name)
+    else:
+        class_ = get_object_or_404(Clazz, name=id_or_name)
+    user = request.user
+    if not check_permission(user, class_):
+        return HttpResponseForbidden('无权访问该班级页面。')
+    profiles = class_.profile_set.all()
     context = {
         'page': 'list',
-        'name': clazz,
+        'name': class_.name,
         'profiles': profiles,
     }
     return render(request, 'contacts/list.html', context)
 
-@user_passes_test(lambda user: user.is_superuser)
-def department_list(request, department=None):
-    if department:
-        profiles = Profile.objects.filter(department=department)
+@login_required
+def department_list(request, id_or_code_or_name):
+    if isinstance(id_or_code_or_name, int):
+        department = get_object_or_404(Department, id=id_or_code_or_name)
+    elif len(id_or_code_or_name) == 3 and id_or_code_or_name.isdigit():
+        department = get_object_or_404(Department, code=id_or_code_or_name)
     else:
-        profiles = Profile.objects.all()
+        department = get_object_or_404(Department, name=id_or_code_or_name)
+    user = request.user
+    if not check_permission(user, department):
+        return HttpResponseForbidden('无权访问该院系页面。')
+    classes = department.clazz_set.all()
+    profiles = set()
+    for class_ in classes:
+        profiles.update(class_.profile_set.all())
+    profiles = list(profiles)
+    profiles.sort(key=lambda p: p.student_id)
     context = {
         'page': 'list',
-        'name': department if department else '全部',
+        'name': department.name,
         'profiles': profiles,
     }
     return render(request, 'contacts/list.html', context)

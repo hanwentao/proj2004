@@ -64,13 +64,15 @@
         <td><a href="{% url 'profile' profile.student_id %}">{{ profile.student_id }}</a></td>
         <td><a href="{% url 'profile' profile.student_id %}">{{ profile.name }}</a></td>
         <td>{{ profile.gender|gender }}</td>
-        <td><a href="{% url 'department_list' profile.department %}">{{ profile.department }}</a></td>
         <td>
-          {% if profile.clazz %}
-          <a href="{% url 'clazz_list' profile.clazz %}">{{ profile.clazz }}</a>
-          {% else %}
-          <span class="text-muted">（无）</span>
-          {% endif %}
+          {% for department in profile.department_list %}
+          <a href="{% url 'department_list' department %}">{{ department }}</a>
+          {% endfor %}
+        </td>
+        <td>
+          {% for class_ in profile.clazz_list %}
+          <a href="{% url 'class_list' class_ %}">{{ class_ }}</a>
+          {% endfor %}
         </td>
         <td>
           {% if profile.user.last_login %}

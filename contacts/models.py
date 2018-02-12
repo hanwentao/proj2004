@@ -4,12 +4,15 @@ from django.db import models
 from django.conf import settings
 from django.urls import reverse
 from django.core.validators import RegexValidator
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User  # FIXME: Use AUTH_USER_MODEL instead
+from django.contrib.auth import get_user_model
 
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
 from phonenumber_field.modelfields import PhoneNumberField
 from sortedm2m.fields import SortedManyToManyField
+
+from . import utils
 
 
 class Department(models.Model):
@@ -82,6 +85,11 @@ class Profile(models.Model):
         return self.clazzes.first().department.name
 
     @property
+    def department_list(self):
+        d = [c.department.name for c in self.clazzes.all()]
+        return utils.unique(d)
+
+    @property
     def verification_code(self):
         m = hashlib.md5()
         m.update(self.student_id.encode())
@@ -126,3 +134,20 @@ class Extra(models.Model):
     class Meta:
         verbose_name = '额外信息'
         verbose_name_plural = '额外信息'
+
+def check_permission(user, obj):
+    if user.is_superuser:
+        return True
+    if isinstance(obj, Department):
+        return obj.linkmen.filter(id=user.id).exists()
+    elif isinstance(obj, Clazz):
+        return obj.linkmen.filter(id=user.id).exists() or check_permission(user, obj.department)
+    elif isinstance(obj, get_user_model()):
+        if user.id == obj.id:
+            return True
+        for class_ in obj.profile.clazzes.all():
+            if check_permission(user, class_):
+                return True
+        return False
+    else:
+        return False
