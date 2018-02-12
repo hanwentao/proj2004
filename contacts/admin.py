@@ -9,16 +9,23 @@ from .models import (
 
 
 class DepartmentAdmin(admin.ModelAdmin):
-    search_fields = [
+    filter_horizontal = (
+        'linkmen',
+    )
+    search_fields = (
         'code',
         'name',
-    ]
+    )
 
 
 class ClazzAdmin(admin.ModelAdmin):
-    search_fields = [
+    filter_horizontal = (
+        'linkmen',
+    )
+    search_fields = (
         'name',
-    ]
+        'department__name',
+    )
 
 
 class ProfileAdmin(admin.ModelAdmin):
