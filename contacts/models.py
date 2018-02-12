@@ -15,7 +15,7 @@ from sortedm2m.fields import SortedManyToManyField
 class Department(models.Model):
     code = models.CharField('代码', max_length=3)
     name = models.CharField('名称', max_length=100)
-    linkmen = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name='召集人')
+    linkmen = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, verbose_name='召集人')
 
     def __str__(self):
         return f'{self.code} {self.name}'
@@ -29,7 +29,7 @@ class Department(models.Model):
 class Clazz(models.Model):
     name = models.CharField('名称', max_length=100)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, verbose_name='院系')
-    linkmen = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name='召集人')
+    linkmen = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, verbose_name='召集人')
 
     def __str__(self):
         return self.name
