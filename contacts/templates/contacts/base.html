@@ -30,17 +30,6 @@
           </li>
           {%   endif %}
           {% endif %}
-          {% if user.is_staff or user.is_superuser %}
-          {%   if page == 'list' %}
-          <li class="nav-item active">
-            <a class="nav-link" href="#">统计信息<span class="sr-only">（当前页）</span></a>
-          </li>
-          {%   else %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'department_list' %}">统计信息</a>
-          </li>
-          {%   endif %}
-          {% endif %}
         </ul>
         <form class="form-inline">
           {% if user.is_authenticated %}

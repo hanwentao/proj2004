@@ -21,7 +21,7 @@
   <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">学号</label><div class="col-8 col-sm-10"><input type="text" readonly class="form-control-plaintext" value="{{ profile.student_id }}"></div></div>
   <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">姓名</label><div class="col-8 col-sm-10"><input type="text" readonly class="form-control-plaintext" value="{{ profile.name }}"></div></div>
   <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">院系</label><div class="col-8 col-sm-10"><input type="text" readonly class="form-control-plaintext" value="{{ profile.department }}"></div></div>
-  <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">班级</label><div class="col-8 col-sm-10"><input type="text" readonly class="form-control-plaintext" value="{{ profile.clazz }}"></div></div>
+  <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">班级</label><div class="col-8 col-sm-10"><input type="text" readonly class="form-control-plaintext" value="{{ profile.clazz_list|join:"、" }}"></div></div>
   <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">专业</label><div class="col-8 col-sm-10"><input type="text" readonly class="form-control-plaintext" value="{{ profile.major }}"></div></div>
   <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">入学年份</label><div class="col-8 col-sm-10"><input type="text" readonly class="form-control-plaintext" value="{{ profile.enroll_year }}"></div></div>
   <div class="form-group row"><label class="col-4 col-sm-2 col-form-label">毕业年份</label><div class="col-8 col-sm-10"><input type="text" readonly class="form-control-plaintext" value="{{ profile.graduate_year }}"></div></div>

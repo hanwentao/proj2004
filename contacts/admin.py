@@ -25,8 +25,6 @@ class ProfileAdmin(admin.ModelAdmin):
     search_fields = [
         'student_id',
         'name',
-        'department',
-        'clazz',
         'major',
     ]
 
