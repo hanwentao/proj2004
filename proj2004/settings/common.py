@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'contacts.apps.ContactsConfig',
     'phonenumber_field',
     'imagekit',
+    'sortedm2m',
     'bootstrap4',
     'django.contrib.admin',
     'django.contrib.auth',

@@ -9,6 +9,33 @@ from django.contrib.auth.models import User
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
 from phonenumber_field.modelfields import PhoneNumberField
+from sortedm2m.fields import SortedManyToManyField
+
+
+class Department(models.Model):
+    code = models.CharField('代码', max_length=3)
+    name = models.CharField('名称', max_length=100)
+
+    def __str__(self):
+        return f'{self.code} {self.name}'
+
+    class Meta:
+        verbose_name = '院系'
+        verbose_name_plural = '院系'
+        ordering = ['code']
+
+
+class Clazz(models.Model):
+    name = models.CharField('名称', max_length=100)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, verbose_name='院系')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = '班级'
+        verbose_name_plural = '班级'
+        ordering = ['name']
 
 
 class Profile(models.Model):
@@ -26,6 +53,7 @@ class Profile(models.Model):
     enroll_year = models.IntegerField('入学年份', default=2004)
     graduate_year = models.IntegerField('毕业年份', default=2008)
     department = models.CharField('院系', max_length=100)
+    clazzes = SortedManyToManyField(Clazz, verbose_name='班级')
     major = models.CharField('专业', max_length=100)
     clazz = models.CharField('班级', max_length=100)
     industry = models.CharField('所在行业', max_length=100, blank=True)
@@ -40,6 +68,18 @@ class Profile(models.Model):
     address = models.CharField('通讯地址', max_length=250, blank=True, help_text='请填写完整、规范的通讯地址。如在国外，可使用外文地址。')
     postcode = models.CharField('邮编', max_length=100, blank=True)
     remark = models.CharField('备注', max_length=250, blank=True, help_text='如果以上内容有特殊情况的，可在备注栏中说明。例如：学籍信息有误；有转系情况；有多个手机号、邮箱；有多个常住地等。')
+
+    @property
+    def clazz(self):
+        return self.clazzes.first().name
+
+    @property
+    def clazz_list(self):
+        return [c.name for c in self.clazzes.all()]
+
+    @property
+    def department(self):
+        return self.clazzes.first().department.name
 
     @property
     def verification_code(self):
