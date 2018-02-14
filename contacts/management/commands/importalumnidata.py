@@ -6,9 +6,14 @@ import sys
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 
-from ...models import Profile, Extra
+from ...models import (
+    Department,
+    Clazz,
+    Profile,
+    Extra,
+)
 
-def create_user_with_basic_info(student_id, name, gender, dob, enroll_year, graduate_year, department, major, clazz):
+def create_user_with_basic_info(student_id, name, gender, dob, enroll_year, graduate_year, department_name, major, class_name, department_code):
     user, created = User.objects.get_or_create(username=student_id)
     profile, _ = Profile.objects.get_or_create(user=user)
     extra, _ = Extra.objects.get_or_create(user=user)
@@ -18,10 +23,15 @@ def create_user_with_basic_info(student_id, name, gender, dob, enroll_year, grad
     profile.dob = dob
     profile.enroll_year = enroll_year
     profile.graduate_year = graduate_year
-    profile.department = department
+    department, _ = Department.objects.update_or_create(name=department_name, defaults={
+        'code': department_code,
+    })
+    class_, _ = Clazz.objects.update_or_create(name=class_name, defaults={
+        'department': department,
+    })
     profile.major = major
-    profile.clazz = clazz
     profile.save()
+    profile.clazzes.add(class_)
     return created
 
 
@@ -45,7 +55,7 @@ class Command(BaseCommand):
                     first = False
                     if with_header:
                         continue
-                department_id, department, student_id, name, gender, dob, clazz, major, enroll_date, graduate_date, grade, graduate_category = row
+                department_code, department, student_id, name, gender, dob, clazz, major, enroll_date, graduate_date, grade, graduate_category = row
                 gender = 'M' if gender == '男' else 'F'
                 try:
                     dob = datetime.datetime.strptime(dob, '%Y%m%d').date()
@@ -59,7 +69,7 @@ class Command(BaseCommand):
                     graduate_year = int(graduate_date[:4])
                 except ValueError:
                     graduate_year = 2008
-                if create_user_with_basic_info(student_id, name, gender, dob, enroll_year, graduate_year, department, major, clazz):
+                if create_user_with_basic_info(student_id, name, gender, dob, enroll_year, graduate_year, department, major, clazz, department_code):
                     num_alumni_created += 1
                 else:
                     num_alumni_updated += 1
