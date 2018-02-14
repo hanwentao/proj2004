@@ -36,7 +36,7 @@
               {% if nav.0 == 'list' %}
               class="nav-link active" href="#"
               {% else %}
-              class="nav-link" href="{% url 'class_detail' user.linked_classes.0 %}"
+              class="nav-link" href="{% url 'class_detail' user.linked_classes.0.id %}"
               {% endif %}
             >统计信息</a>
           </li>

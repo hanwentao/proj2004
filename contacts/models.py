@@ -73,6 +73,22 @@ class Profile(models.Model):
     remark = models.CharField('备注', max_length=250, blank=True, help_text='如果以上内容有特殊情况的，可在备注栏中说明。例如：学籍信息有误；有转系情况；有多个手机号、邮箱；有多个常住地等。')
 
     @property
+    def completeness(self):
+        filled = [(1 if x else 0) for x in (
+            self.industry,
+            self.organization,
+            self.position,
+            self.title,
+            self.mobile,
+            self.email,
+            self.wechat,
+            self.location,
+            self.address,
+            self.postcode,
+        )]
+        return '%0.0f%%' % (sum(filled) / len(filled) * 100)
+
+    @property
     def clazz(self):
         return self.clazzes.first().name
 
