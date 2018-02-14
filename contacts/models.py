@@ -151,3 +151,13 @@ def check_permission(user, obj):
         return False
     else:
         return False
+
+def get_linked_classes(user):
+    if user.is_superuser:
+        return Clazz.objects.all()
+    classes = set()
+    for d in user.department_set.all():
+        classes.update(d.clazz_set.all())
+    for c in user.clazz_set.all():
+        classes.add(c)
+    return sorted(classes, key=lambda c: c.name)

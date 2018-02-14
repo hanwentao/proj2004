@@ -30,13 +30,15 @@
             >个人信息</a>
           </li>
           {% endif %}
-          {% if user.department_set or user.clazz_set %}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">统计信息</a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item disabled" href="#">计40</a>
-              <a class="dropdown-item" href="#">计44</a>
-            </div>
+          {% if user.linked_classes %}
+          <li class="nav-item">
+            <a
+              {% if nav.0 == 'list' %}
+              class="nav-link active" href="#"
+              {% else %}
+              class="nav-link" href="{% url 'class_detail' user.linked_classes.0 %}"
+              {% endif %}
+            >统计信息</a>
           </li>
           {% endif %}
         </ul>

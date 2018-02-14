@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'contacts.middleware.LinkedClassesMiddleware',
 ]
 
 ROOT_URLCONF = 'proj2004.urls'

@@ -1,0 +1,101 @@
+{% extends "contacts/base.html" %}
+{% load static %}
+{% load contacts %}
+
+{% block style %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/datatables.min.css' %}">
+{% endblock %}
+
+{% block script %}
+{{ block.super }}
+<script src="{% static 'js/datatables.min.js' %}"></script>
+<script>
+  $(function() {
+    $("#profile-list").DataTable({
+      pageLength: -1,
+      lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "全部"]],
+      language: {
+        "sProcessing":   "处理中...",
+        "sLengthMenu":   "显示 _MENU_ 项结果",
+        "sZeroRecords":  "没有匹配结果",
+        "sInfo":         "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+        "sInfoEmpty":    "显示第 0 至 0 项结果，共 0 项",
+        "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+        "sInfoPostFix":  "",
+        "sSearch":       "搜索:",
+        "sUrl":          "",
+        "sEmptyTable":     "表中数据为空",
+        "sLoadingRecords": "载入中...",
+        "sInfoThousands":  ",",
+        "oPaginate": {
+          "sFirst":    "首页",
+          "sPrevious": "上页",
+          "sNext":     "下页",
+          "sLast":     "末页"
+        },
+        "oAria": {
+          "sSortAscending":  ": 以升序排列此列",
+          "sSortDescending": ": 以降序排列此列"
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+<main role="main" class="container">
+  <h1>联系班级</h1>
+  <ul class="list-inline">
+    {% for class in linked_classes %}
+    <li class="list-inline-item">
+      {% if class.name == name %}
+      {{ class.name }}
+      {% else %}
+      <a href="{% url 'class_detail' class.id %}">{{ class.name|default:"（空）" }}</a>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  <h1>{{ name }}</h1>
+  <table id="profile-list" class="table table-striped table-hover table-sm">
+    <thead class="thead-light">
+      <tr>
+        <th>学号</th>
+        <th>姓名</th>
+        <th>性别</th>
+        <th>院系</th>
+        <th>班级</th>
+        <th>最近登录时间</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for profile in profiles %}
+      <tr>
+        <td><a href="{% url 'profile' profile.student_id %}">{{ profile.student_id }}</a></td>
+        <td><a href="{% url 'profile' profile.student_id %}">{{ profile.name }}</a></td>
+        <td>{{ profile.gender|gender }}</td>
+        <td>
+          {% for department in profile.department_list %}
+          {{ department }}
+          {% endfor %}
+        </td>
+        <td>
+          {% for class_name in profile.clazz_list %}
+          <a href="{% url 'class_detail' class_name %}">{{ class_name }}</a>
+          {% endfor %}
+        </td>
+        <td>
+          {% if profile.user.last_login %}
+          <span class="text-info">{{ profile.user.last_login|date:"Y-m-d H:i:s" }}</span>
+          {% else %}
+          <span class="text-warning">尚未登录</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</main>
+{% endblock %}

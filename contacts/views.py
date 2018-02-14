@@ -14,6 +14,7 @@ from .models import (
     Clazz,
     Profile,
     check_permission,
+    get_linked_classes,
 )
 from .forms import (
     ProfileForm,
@@ -93,7 +94,7 @@ def profile_edit(request, username):
     return render(request, 'contacts/profile.html', context)
 
 @login_required
-def class_list(request, id_or_name):
+def class_detail(request, id_or_name):
     if isinstance(id_or_name, int):
         class_ = get_object_or_404(Clazz, id=id_or_name)
     else:
@@ -102,12 +103,14 @@ def class_list(request, id_or_name):
     if not check_permission(user, class_):
         return HttpResponseForbidden('无权访问该班级页面。')
     profiles = class_.profile_set.all()
+    linked_classes = get_linked_classes(user)
     context = {
         'nav': ('list', class_.name),
         'name': class_.name,
+        'linked_classes': linked_classes,
         'profiles': profiles,
     }
-    return render(request, 'contacts/list.html', context)
+    return render(request, 'contacts/class_detail.html', context)
 
 @login_required
 def department_list(request, id_or_code_or_name):
