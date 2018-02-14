@@ -1,4 +1,5 @@
 import hashlib
+import re
 
 from django.db import models
 from django.conf import settings
@@ -168,12 +169,23 @@ def check_permission(user, obj):
     else:
         return False
 
+def split_class_name(name):
+    if not name:
+        return ('', -1, -1, '')
+    parts = re.split(r'(\d+)', name)
+    grade = int(parts[1][0])
+    if grade == 4:
+        grade = -1
+    number = int(parts[1][1:] or '0')
+    return (parts[0], grade, number, parts[2])
+
 def get_linked_classes(user):
     if user.is_superuser:
-        return Clazz.objects.all()
-    classes = set()
-    for d in user.department_set.all():
-        classes.update(d.clazz_set.all())
-    for c in user.clazz_set.all():
-        classes.add(c)
-    return sorted(classes, key=lambda c: c.name)
+        classes = Clazz.objects.all()
+    else:
+        classes = set()
+        for d in user.department_set.all():
+            classes.update(d.clazz_set.all())
+        for c in user.clazz_set.all():
+            classes.add(c)
+    return sorted(classes, key=lambda c: split_class_name(c.name))

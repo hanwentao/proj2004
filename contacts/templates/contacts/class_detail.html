@@ -51,7 +51,7 @@
     {% for class in linked_classes %}
     <li class="list-inline-item">
       {% if class.name == name %}
-      {{ class.name }}
+      {{ class.name|default:"（空）" }}
       {% else %}
       <a href="{% url 'class_detail' class.id %}">{{ class.name|default:"（空）" }}</a>
       {% endif %}
