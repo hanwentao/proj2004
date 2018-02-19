@@ -14,8 +14,8 @@ from . import utils
 
 
 class Department(models.Model):
-    code = models.CharField('代码', max_length=3)
-    name = models.CharField('名称', max_length=100)
+    code = models.CharField('代码', max_length=3, unique=True)
+    name = models.CharField('名称', max_length=100, unique=True)
     linkmen = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, verbose_name='召集人')
 
     def __str__(self):
@@ -28,7 +28,7 @@ class Department(models.Model):
 
 
 class Clazz(models.Model):
-    name = models.CharField('名称', max_length=100)
+    name = models.CharField('名称', max_length=100, unique=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, verbose_name='院系')
     linkmen = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, verbose_name='召集人')
 
