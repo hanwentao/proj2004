@@ -1,6 +1,3 @@
-import hashlib
-import re
-
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
@@ -87,7 +84,7 @@ class Profile(models.Model):
             self.address,
             self.postcode,
         )]
-        return '%0.0f%%' % (sum(filled) / len(filled) * 100)
+        return f'{sum(filled) / len(filled) * 100:0.0f}%'
 
     @property
     def clazz(self):
@@ -108,11 +105,8 @@ class Profile(models.Model):
 
     @property
     def verification_code(self):
-        m = hashlib.md5()
-        m.update(self.student_id.encode())
-        m.update(self.name.encode())
-        m.update(settings.SECRET_KEY.encode())
-        return m.hexdigest()[:6]
+        return utils.generate_verification_code(
+            self.student_id, self.name, settings.SECRET_KEY)
 
     def get_absolute_url(self):
         return reverse('profile', kwargs={'username': self.user.username})
@@ -169,16 +163,6 @@ def check_permission(user, obj):
     else:
         return False
 
-def split_class_name(name):
-    if not name:
-        return ('', -1, -1, '')
-    parts = re.split(r'(\d+)', name)
-    grade = int(parts[1][0])
-    if grade == 4:
-        grade = -1
-    number = int(parts[1][1:] or '0')
-    return (parts[0], grade, number, parts[2])
-
 def get_linked_classes(user):
     if user.is_superuser:
         classes = Clazz.objects.all()
@@ -188,4 +172,5 @@ def get_linked_classes(user):
             classes.update(d.clazz_set.all())
         for c in user.clazz_set.all():
             classes.add(c)
-    return sorted(classes, key=lambda c: split_class_name(c.name))
+    return sorted(classes, key=lambda c: utils.split_class_name(
+        c.name, settings.DEFAULT_GRADE))

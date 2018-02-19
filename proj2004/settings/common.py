@@ -143,5 +143,6 @@ LOGIN_URL = '/account/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# XXX: For export of invitation links
+# Application-specific settings
 BASE_URL = 'http://127.0.0.1:8000'
+DEFAULT_GRADE = 2004
