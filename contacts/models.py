@@ -2,7 +2,6 @@ from django.db import models
 from django.conf import settings
 from django.urls import reverse
 from django.core.validators import RegexValidator
-from django.contrib.auth.models import User  # FIXME: Use AUTH_USER_MODEL instead
 from django.contrib.auth import get_user_model
 
 from imagekit.models import ProcessedImageField
@@ -48,7 +47,7 @@ class Profile(models.Model):
         ('F', '女'),
     )
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     student_id = models.CharField('学号', max_length=10)
     name = models.CharField('姓名', max_length=100)
     gender = models.CharField('性别', max_length=1, choices=GENDER_CHOICES)
@@ -129,7 +128,7 @@ def get_photo_upload_path(instance, filename):
 
 
 class Extra(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     attend = models.NullBooleanField('是否参加秩年校庆活动', help_text='全校秩年校庆活动安排在2018年4月29日，欢迎各位返校参与。')
     email_prefix = models.CharField('校友邮箱用户名前缀', max_length=32, unique=True, blank=True, null=True,
         validators=[RegexValidator(r'^[A-Za-z][A-Za-z_-]*[A-Za-z]$', '邮箱用户名前缀不合法。')],
