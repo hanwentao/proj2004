@@ -18,5 +18,5 @@ def split_class_name(name, default_grade=None):
     grade = int(parts[1][0])
     if default_grade is not None and grade == default_grade % 10:
         grade = -1
-    number = int(parts[1][1:] or '0')
+    number = int(parts[1][1:] or '-1')
     return (parts[0], grade, number, parts[2])
