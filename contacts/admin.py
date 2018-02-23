@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from .models import (
     Department,
-    Clazz,
+    Class,
     Profile,
     Extra,
 )
@@ -18,7 +18,7 @@ class DepartmentAdmin(admin.ModelAdmin):
     )
 
 
-class ClazzAdmin(admin.ModelAdmin):
+class ClassAdmin(admin.ModelAdmin):
     filter_horizontal = (
         'linkmen',
     )
@@ -33,11 +33,11 @@ class ProfileAdmin(admin.ModelAdmin):
         'student_id',
         'name',
         'major',
-        'clazzes__name',
-        'clazzes__department__name',
+        'classes__name',
+        'classes__department__name',
     ]
 
 admin.site.register(Department, DepartmentAdmin)
-admin.site.register(Clazz, ClazzAdmin)
+admin.site.register(Class, ClassAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Extra)

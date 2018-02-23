@@ -11,7 +11,7 @@ from django.contrib.auth import get_user_model
 
 from .models import (
     Department,
-    Clazz,
+    Class,
     Profile,
     check_permission,
     get_linked_classes,
@@ -96,9 +96,9 @@ def profile_edit(request, username):
 @login_required
 def class_detail(request, id_or_name):
     if isinstance(id_or_name, int):
-        class_ = get_object_or_404(Clazz, id=id_or_name)
+        class_ = get_object_or_404(Class, id=id_or_name)
     else:
-        class_ = get_object_or_404(Clazz, name=id_or_name)
+        class_ = get_object_or_404(Class, name=id_or_name)
     user = request.user
     if not check_permission(user, class_):
         return HttpResponseForbidden('无权访问该班级页面。')

@@ -77,8 +77,8 @@
         <td><a href="{% url 'profile' profile.student_id %}">{{ profile.student_id }}</a></td>
         <td><a href="{% url 'profile' profile.student_id %}">{{ profile.name }}</a></td>
         <td>{{ profile.gender|gender }}</td>
-        <td>{{ profile.department_list|join:"、" }}</td>
-        <td>{{ profile.clazz_list|join:"、" }}</td>
+        <td>{{ profile.department_name_list|join:"、" }}</td>
+        <td>{{ profile.class_name_list|join:"、" }}</td>
         <td>{{ profile.completeness }}</td>
         <td>
           {% if profile.user.last_login %}

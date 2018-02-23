@@ -26,7 +26,7 @@ class Department(models.Model):
         ordering = ['code']
 
 
-class Clazz(models.Model):
+class Class(models.Model):
     name = models.CharField('名称', max_length=100, unique=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, verbose_name='院系')
     linkmen = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, verbose_name='召集人')
@@ -54,7 +54,7 @@ class Profile(models.Model):
     dob = models.DateField('出生日期', null=True)
     enroll_year = models.IntegerField('入学年份', default=2004)
     graduate_year = models.IntegerField('毕业年份', default=2008)
-    clazzes = SortedManyToManyField(Clazz, verbose_name='班级')
+    classes = SortedManyToManyField(Class, blank=True, verbose_name='班级')
     major = models.CharField('专业', max_length=100)
     industry = models.CharField('所在行业', max_length=100, blank=True)
     organization = models.CharField('工作单位', max_length=100, blank=True, help_text='请填写工作单位的官方全称。')
@@ -86,21 +86,24 @@ class Profile(models.Model):
         return f'{sum(filled) / len(filled) * 100:0.0f}%'
 
     @property
-    def clazz(self):
-        return self.clazzes.first().name
+    def class_name(self):
+        '''Primary class name.'''
+        return self.classes.first().name
 
     @property
-    def clazz_list(self):
-        return [c.name for c in self.clazzes.all()]
+    def department_name(self):
+        '''Primary department name.'''
+        return self.classes.first().department.name
 
     @property
-    def department(self):
-        return self.clazzes.first().department.name
+    def class_name_list(self):
+        name_list = [c.name for c in self.classes.all()]
+        return name_list
 
     @property
-    def department_list(self):
-        d = [c.department.name for c in self.clazzes.all()]
-        return utils.unique(d)
+    def department_name_list(self):
+        name_list = [c.department.name for c in self.classes.all()]
+        return utils.unique(name_list)
 
     @property
     def verification_code(self):
@@ -111,7 +114,7 @@ class Profile(models.Model):
         return reverse('profile', kwargs={'username': self.user.username})
 
     def __str__(self):
-        return f'{self.student_id} {self.name} {self.clazz}'
+        return f'{self.student_id} {self.name} {self.class_name}'
 
     class Meta:
         verbose_name = '个人信息'
@@ -120,10 +123,7 @@ class Profile(models.Model):
 
 def get_photo_upload_path(instance, filename):
     profile = instance.user.profile
-    if profile.clazz:
-        path = f'uploads/{profile.department}/{profile.clazz}/{profile.student_id}.jpg'
-    else:
-        path = f'uploads/{profile.department}/{profile.student_id}.jpg'
+    path = f'uploads/{profile.department_name}/{profile.class_name}/{profile.student_id}.jpg'
     return path
 
 
@@ -150,12 +150,12 @@ def check_permission(user, obj):
         return True
     if isinstance(obj, Department):
         return obj.linkmen.filter(id=user.id).exists()
-    elif isinstance(obj, Clazz):
+    elif isinstance(obj, Class):
         return obj.linkmen.filter(id=user.id).exists() or check_permission(user, obj.department)
     elif isinstance(obj, get_user_model()):
         if user.id == obj.id:
             return True
-        for class_ in obj.profile.clazzes.all():
+        for class_ in obj.profile.classes.all():
             if check_permission(user, class_):
                 return True
         return False
@@ -164,12 +164,12 @@ def check_permission(user, obj):
 
 def get_linked_classes(user):
     if user.is_superuser:
-        classes = Clazz.objects.all()
+        classes = Class.objects.all()
     else:
         classes = set()
         for d in user.department_set.all():
-            classes.update(d.clazz_set.all())
-        for c in user.clazz_set.all():
+            classes.update(d.class_set.all())
+        for c in user.class_set.all():
             classes.add(c)
     return sorted(classes, key=lambda c: utils.split_class_name(
         c.name, settings.DEFAULT_GRADE))
