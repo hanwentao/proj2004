@@ -5,7 +5,7 @@ import sys
 from django.core.management.base import BaseCommand
 
 from ...models import (
-    Clazz,
+    Class,
     Profile,
 )
 
@@ -36,9 +36,9 @@ class Command(BaseCommand):
                     continue
                 for class_name in class_list.split():
                     try:
-                        class_ = Clazz.objects.get(name=class_name)
-                    except Clazz.DoesNotExist:
+                        class_ = Class.objects.get(name=class_name)
+                    except Class.DoesNotExist:
                         self.stderr.write(self.style.WARNING(f'Class {class_name} does not exist.'))
                         continue
-                    profile.clazzes.add(class_)
+                    profile.classes.add(class_)
                     self.stdout.write(self.style.SUCCESS(f'Added {name} to class {class_name}.'))
