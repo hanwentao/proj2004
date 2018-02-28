@@ -140,6 +140,7 @@ class Extra(models.Model):
         format='JPEG',
         options={'quality': 95},
     )
+    password_reset = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         verbose_name = '额外信息'

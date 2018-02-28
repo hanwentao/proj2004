@@ -8,6 +8,7 @@ from django.shortcuts import (
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from .models import (
     Department,
@@ -20,6 +21,7 @@ from .forms import (
     ProfileForm,
     ExtraForm,
     SetPasswordForm,
+    PasswordResetForm,
 )
 
 def home(request):
@@ -135,3 +137,49 @@ def department_list(request, id_or_code_or_name):
         'profiles': profiles,
     }
     return render(request, 'contacts/list.html', context)
+
+def password_reset(request):
+    if request.method == 'POST':
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            user = form.cleaned_data['username']
+            user.extra.password_reset = timezone.now()
+            user.extra.save()
+            return redirect('password_reset_commit')
+    else:
+        form = PasswordResetForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'contacts/password_reset.html', context)
+
+def password_reset_commit(request):
+    return render(request, 'contacts/password_reset_commit.html')
+
+@login_required
+def password_reset_approve(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden('无权访问管理页面。')
+    if request.method == 'POST':
+        User = get_user_model()
+        for username_list in request.POST.getlist('approved'):
+            for username in username_list.split(','):
+                if not username:
+                    continue
+                try:
+                    user = User.objects.get(username=username)
+                except User.DoesNotExist:
+                    pass
+                else:
+                    # XXX: Needs transaction here?
+                    user.set_unusable_password()
+                    user.save()
+                    user.extra.password_reset = None
+                    user.extra.save()
+        return redirect('password_reset_approve')
+    users = get_user_model().objects.filter(extra__password_reset__isnull=False)
+    context = {
+        'nav': ('password_reset_approve',),
+        'users': users,
+    }
+    return render(request, 'contacts/password_reset_approve.html', context)

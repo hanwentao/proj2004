@@ -1,4 +1,7 @@
 from django import forms
+from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import SetPasswordForm
 
 from .models import Profile, Extra
@@ -163,3 +166,17 @@ class ExtraForm(forms.ModelForm):
                 'unique': '该邮箱用户名前缀已经被其他用户登记使用。',
             }
         }
+
+
+class PasswordResetForm(forms.Form):
+    username = forms.CharField(label='学号', max_length=10,
+        validators=[RegexValidator(r'^[0-9]{10}$', '学号是十位数字。')])
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        User = get_user_model()
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise ValidationError('用户不存在。')
+        return user

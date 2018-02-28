@@ -41,6 +41,17 @@
             >统计信息</a>
           </li>
           {% endif %}
+          {% if user.is_superuser %}
+          <li class="nav-item">
+            <a
+              {% if nav.0 == 'password_reset_approve' %}
+              class="nav-link active" href="#"
+              {% else %}
+              class="nav-link" href="{% url 'password_reset_approve' %}"
+              {% endif %}
+            >重置密码请求确认</a>
+          </li>
+          {% endif %}
         </ul>
         <form class="form-inline">
           {% if user.is_authenticated %}
