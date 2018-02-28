@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand
 
 from ...models import (
     Department,
-    Clazz,
+    Class,
     Profile,
 )
 
@@ -45,7 +45,7 @@ class Command(BaseCommand):
                     self.stdout.write(self.style.SUCCESS(f'Added {name} to department {department_name}.'))
                 for class_name in class_list.split():
                     try:
-                        class_ = Clazz.objects.get(name=class_name)
+                        class_ = Class.objects.get(name=class_name)
                     except Clazz.DoesNotExist:
                         self.stderr.write(self.style.WARNING(f'Class {class_name} does not exist.'))
                         continue
