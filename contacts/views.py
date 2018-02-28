@@ -164,8 +164,6 @@ def password_reset_approve(request):
         User = get_user_model()
         for username_list in request.POST.getlist('approved'):
             for username in username_list.split(','):
-                if not username:
-                    continue
                 try:
                     user = User.objects.get(username=username)
                 except User.DoesNotExist:
@@ -176,6 +174,14 @@ def password_reset_approve(request):
                     user.save()
                     user.extra.password_reset = None
                     user.extra.save()
+        for username in request.POST.getlist('canceled'):
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                pass
+            else:
+                user.extra.password_reset = None
+                user.extra.save()
         return redirect('password_reset_approve')
     users = get_user_model().objects.filter(extra__password_reset__isnull=False)
     context = {
