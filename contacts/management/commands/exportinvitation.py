@@ -6,7 +6,7 @@ from django.db import connection
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 
-from ...models import Profile
+from ...models import Class
 
 
 class Command(BaseCommand):
@@ -17,12 +17,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         path = options['path']
-        with connection.cursor() as cursor:
-            cursor.execute('SELECT DISTINCT department, clazz FROM contacts_profile')
-            groups = cursor.fetchall()
-        for department, clazz in groups:
-            name = '空' if not clazz else clazz
-            xlsx_path = f'{path}/{department}/{name}.xlsx'
+        for class_ in Class.objects.all():
+            class_name = class_.name
+            department_name = class_.department.name
+            xlsx_path = f'{path}/{department_name}/{class_name}.xlsx'
             print(f'Generating {xlsx_path}...')
             wb = Workbook()
             ws = wb.active
@@ -39,14 +37,13 @@ class Command(BaseCommand):
             ws.column_dimensions[get_column_letter(3)].width = 20
             ws.column_dimensions[get_column_letter(4)].width = 10
             ws.column_dimensions[get_column_letter(5)].width = 60
-            alumni = Profile.objects.filter(clazz=clazz)
-            for i, alumnus in enumerate(alumni):
+            for profile in class_.profile_set.all():
                 ws.append([
-                    alumnus.student_id,
-                    alumnus.name,
-                    alumnus.department,
-                    alumnus.clazz,
-                    settings.BASE_URL + alumnus.get_absolute_url() + 'edit/?code=' + alumnus.verification_code,
+                    profile.student_id,
+                    profile.name,
+                    department_name,
+                    class_name,
+                    settings.BASE_URL + profile.get_absolute_url() + 'edit/?code=' + profile.verification_code,
                 ])
             os.makedirs(os.path.dirname(xlsx_path), exist_ok=True)
             wb.save(xlsx_path)
