@@ -30,15 +30,26 @@
             >个人信息</a>
           </li>
           {% endif %}
+          {% if user.is_superuser or user.is_staff %}
+          <li class="nav-item">
+            <a
+              {% if nav.0 == 'overview' %}
+              class="nav-link active" href="#"
+              {% else %}
+              class="nav-link" href="{% url 'overview' %}"
+              {% endif %}
+            >整体统计信息</a>
+          </li>
+          {% endif %}
           {% if user.linked_classes %}
           <li class="nav-item">
             <a
-              {% if nav.0 == 'list' %}
+              {% if nav.0 == 'class_detail' %}
               class="nav-link active" href="#"
               {% else %}
               class="nav-link" href="{% url 'class_detail' user.linked_classes.0.id %}"
               {% endif %}
-            >统计信息</a>
+            >分班统计信息</a>
           </li>
           {% endif %}
           {% if user.is_superuser %}

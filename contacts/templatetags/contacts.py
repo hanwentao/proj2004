@@ -42,3 +42,16 @@ def gender(value):
         return '女'
     else:
         return value
+
+@register.filter
+def percentage(value, arg):
+    text = f'{value * 100:0.0f}%'
+    if arg:
+        if value >= 0.8:
+            level = 'success'
+        elif value >= 0.5:
+            level = 'warning'
+        else:
+            level = 'danger'
+        text = f'<span class="text-{level}">{text}</span>'
+    return text

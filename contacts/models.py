@@ -17,6 +17,12 @@ class Department(models.Model):
     name = models.CharField('名称', max_length=100, unique=True)
     linkmen = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, verbose_name='召集人')
 
+    @property
+    def default_classes(self):
+        classes = [c for c in self.class_set.all() if c.split_name[1] == -1]
+        classes.sort(key=lambda c: c.split_name)
+        return classes
+
     def __str__(self):
         return f'{self.code} {self.name}'
 
@@ -30,6 +36,41 @@ class Class(models.Model):
     name = models.CharField('名称', max_length=100, unique=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, verbose_name='院系')
     linkmen = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, verbose_name='召集人')
+
+    @property
+    def split_name(self):
+        return utils.split_class_name(self.name, default_grade=settings.DEFAULT_GRADE)
+
+    @property
+    def count(self):
+        return self.profile_set.count()
+
+    @property
+    def login_count(self):
+        return self.profile_set.filter(user__last_login__isnull=False).count()
+
+    @property
+    def login_ratio(self):
+        return self.login_count / self.count
+
+    def percentage_complete_count(self, percentage):
+        return len([p for p in self.profile_set.all() if p.completeness >= percentage])
+
+    @property
+    def p50_complete_count(self):
+        return self.percentage_complete_count(0.5)
+
+    @property
+    def p50_complete_ratio(self):
+        return self.p50_complete_count / self.count
+
+    @property
+    def p80_complete_count(self):
+        return self.percentage_complete_count(0.8)
+
+    @property
+    def p80_complete_ratio(self):
+        return self.p80_complete_count / self.count
 
     def __str__(self):
         return self.name
@@ -83,7 +124,7 @@ class Profile(models.Model):
             self.address,
             self.postcode,
         )]
-        return f'{sum(filled) / len(filled) * 100:0.0f}%'
+        return sum(filled) / len(filled)
 
     @property
     def class_name(self):

@@ -107,7 +107,7 @@ def class_detail(request, id_or_name):
     profiles = class_.profile_set.all()
     linked_classes = get_linked_classes(user)
     context = {
-        'nav': ('list', class_.name),
+        'nav': ('class_detail', class_.name),
         'name': class_.name,
         'linked_classes': linked_classes,
         'profiles': profiles,
@@ -183,3 +183,13 @@ def password_reset_approve(request):
         'users': users,
     }
     return render(request, 'contacts/password_reset_approve.html', context)
+
+@login_required
+def overview(request):
+    if not request.user.is_superuser or not request.user.is_staff:
+        return HttpResponseForbidden('无权访问管理页面。')
+    context = {
+        'nav': ('overview',),
+        'departments': Department.objects.all(),
+    }
+    return render(request, 'contacts/overview.html', context)
