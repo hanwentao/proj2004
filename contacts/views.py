@@ -104,7 +104,7 @@ def class_detail(request, id_or_name):
     user = request.user
     if not check_permission(user, class_):
         return HttpResponseForbidden('无权访问该班级页面。')
-    profiles = class_.profile_set.all()
+    profiles = class_.profile_set.filter(user__is_active=True)
     linked_classes = get_linked_classes(user)
     context = {
         'nav': ('class_detail', class_.name),

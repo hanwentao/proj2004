@@ -43,18 +43,18 @@ class Class(models.Model):
 
     @property
     def count(self):
-        return self.profile_set.count()
+        return self.profile_set.filter(user__is_active=True).count()
 
     @property
     def login_count(self):
-        return self.profile_set.filter(user__last_login__isnull=False).count()
+        return self.profile_set.filter(user__is_active=True, user__last_login__isnull=False).count()
 
     @property
     def login_ratio(self):
         return self.login_count / self.count
 
     def percentage_complete_count(self, percentage):
-        return len([p for p in self.profile_set.all() if p.completeness >= percentage])
+        return len([p for p in self.profile_set.filter(user__is_active=True) if p.completeness >= percentage])
 
     @property
     def p50_complete_count(self):
