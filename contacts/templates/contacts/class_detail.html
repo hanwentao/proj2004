@@ -40,6 +40,28 @@
         }
       }
     });
+    function copyTextToClipboard(text) {
+      var textArea = document.createElement("textarea");
+      textArea.style.position = 'fixed';
+      textArea.style.top = 0;
+      textArea.style.left = 0;
+      textArea.style.width = '2em';
+      textArea.style.height = '2em';
+      textArea.style.padding = 0;
+      textArea.style.border = 'none';
+      textArea.style.outline = 'none';
+      textArea.style.boxShadow = 'none';
+      textArea.style.background = 'transparent';
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+    }
+    $(".copy-url").click(function() {
+      var url = $(this).attr("data-url");
+      copyTextToClipboard(url);
+    });
   });
 </script>
 {% endblock %}
@@ -69,6 +91,7 @@
         <th>班级</th>
         <th>信息完整程度</th>
         <th>最近登录时间</th>
+        <th>邀请链接</th>
       </tr>
     </thead>
     <tbody>
@@ -86,6 +109,9 @@
           {% else %}
           <span class="text-warning">尚未登录</span>
           {% endif %}
+        </td>
+        <td>
+          <a href="#" class="copy-url" data-url="{{ profile.invitation_url }}">复制链接</a>
         </td>
       </tr>
       {% endfor %}

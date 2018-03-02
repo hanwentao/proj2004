@@ -151,6 +151,10 @@ class Profile(models.Model):
         return utils.generate_verification_code(
             self.student_id, self.name, settings.SECRET_KEY)
 
+    @property
+    def invitation_url(self):
+        return f"{settings.BASE_URL}{reverse('profile_edit', kwargs={'username': self.student_id})}?code={self.verification_code}"
+
     def get_absolute_url(self):
         return reverse('profile', kwargs={'username': self.user.username})
 

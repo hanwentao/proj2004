@@ -43,7 +43,7 @@ class Command(BaseCommand):
                     profile.name,
                     department_name,
                     class_name,
-                    settings.BASE_URL + profile.get_absolute_url() + 'edit/?code=' + profile.verification_code,
+                    profile.invitation_url,
                 ])
             os.makedirs(os.path.dirname(xlsx_path), exist_ok=True)
             wb.save(xlsx_path)
