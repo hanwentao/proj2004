@@ -3,6 +3,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.core.validators import RegexValidator
 from django.contrib.auth import get_user_model
+from django.utils.crypto import get_random_string
 
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
@@ -168,7 +169,8 @@ class Profile(models.Model):
 
 def get_photo_upload_path(instance, filename):
     profile = instance.user.profile
-    path = f'uploads/{profile.department_name}/{profile.class_name}/{profile.student_id}.jpg'
+    secure_code = get_random_string(7)
+    path = f'uploads/{profile.department_name}/{profile.class_name}/{profile.student_id}_{secure_code}.jpg'
     return path
 
 
