@@ -15,7 +15,6 @@ from .models import (
     Class,
     Profile,
     check_permission,
-    get_linked_classes,
 )
 from .forms import (
     ProfileForm,
@@ -105,11 +104,9 @@ def class_detail(request, id_or_name):
     if not check_permission(user, class_):
         return HttpResponseForbidden('无权访问该班级页面。')
     profiles = class_.profile_set.filter(user__is_active=True)
-    linked_classes = get_linked_classes(user)
     context = {
         'nav': ('class_detail', class_.name),
         'name': class_.name,
-        'linked_classes': linked_classes,
         'profiles': profiles,
     }
     return render(request, 'contacts/class_detail.html', context)
@@ -158,10 +155,11 @@ def password_reset_commit(request):
 
 @login_required
 def password_reset_approve(request):
-    if not request.user.is_superuser:
+    current_user = request.user
+    if not current_user.linked_classes:
         return HttpResponseForbidden('无权访问管理页面。')
+    User = get_user_model()
     if request.method == 'POST':
-        User = get_user_model()
         for username_list in request.POST.getlist('approved'):
             for username in username_list.split(','):
                 try:
@@ -169,21 +167,24 @@ def password_reset_approve(request):
                 except User.DoesNotExist:
                     pass
                 else:
-                    # XXX: Needs transaction here?
-                    user.set_unusable_password()
-                    user.save()
-                    user.extra.password_reset = None
-                    user.extra.save()
+                    if check_permission(current_user, user, False):
+                        # XXX: Needs transaction here?
+                        user.set_unusable_password()
+                        user.save()
+                        user.extra.password_reset = None
+                        user.extra.save()
         for username in request.POST.getlist('canceled'):
             try:
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
                 pass
             else:
-                user.extra.password_reset = None
-                user.extra.save()
+                if check_permission(current_user, user, False):
+                    user.extra.password_reset = None
+                    user.extra.save()
         return redirect('password_reset_approve')
-    users = get_user_model().objects.filter(extra__password_reset__isnull=False)
+    users = [u for u in User.objects.filter(extra__password_reset__isnull=False)
+               if check_permission(current_user, u, False)]
     context = {
         'nav': ('password_reset_approve',),
         'users': users,

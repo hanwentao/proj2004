@@ -193,7 +193,7 @@ class Extra(models.Model):
         verbose_name = '额外信息'
         verbose_name_plural = '额外信息'
 
-def check_permission(user, obj):
+def check_permission(user, obj, self_check=True):
     if user.is_superuser:
         return True
     if isinstance(obj, Department):
@@ -201,7 +201,7 @@ def check_permission(user, obj):
     elif isinstance(obj, Class):
         return obj.linkmen.filter(id=user.id).exists() or check_permission(user, obj.department)
     elif isinstance(obj, get_user_model()):
-        if user.id == obj.id:
+        if self_check and user.id == obj.id:
             return True
         for class_ in obj.profile.classes.all():
             if check_permission(user, class_):

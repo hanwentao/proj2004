@@ -70,7 +70,7 @@
 <main role="main" class="container">
   <h1>联系班级</h1>
   <ul class="list-inline">
-    {% for class in linked_classes %}
+    {% for class in user.linked_classes %}
     <li class="list-inline-item">
       {% if class.name == name %}
       {{ class.name|default:"（空）" }}
