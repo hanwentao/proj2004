@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.http import HttpResponseForbidden
+from django.contrib import messages
 from django.shortcuts import (
     get_object_or_404,
     redirect,
@@ -160,6 +161,8 @@ def password_reset_approve(request):
         return HttpResponseForbidden('无权访问管理页面。')
     User = get_user_model()
     if request.method == 'POST':
+        approve_count = 0
+        cancel_count = 0
         for username_list in request.POST.getlist('approved'):
             for username in username_list.split(','):
                 try:
@@ -173,6 +176,7 @@ def password_reset_approve(request):
                         user.save()
                         user.extra.password_reset = None
                         user.extra.save()
+                        approve_count += 1
         for username in request.POST.getlist('canceled'):
             try:
                 user = User.objects.get(username=username)
@@ -182,6 +186,8 @@ def password_reset_approve(request):
                 if check_permission(current_user, user, False):
                     user.extra.password_reset = None
                     user.extra.save()
+                    cancel_count += 1
+        messages.info(request, f'密码重置操作结果：{approve_count} 位确认，{cancel_count} 位取消。')
         return redirect('password_reset_approve')
     users = [u for u in User.objects.filter(extra__password_reset__isnull=False)
                if check_permission(current_user, u, False)]
