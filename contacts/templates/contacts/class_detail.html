@@ -10,6 +10,7 @@
 {% block script %}
 {{ block.super }}
 <script src="{% static 'js/datatables.min.js' %}"></script>
+<script src="{% static 'js/clipboard.min.js' %}"></script>
 <script>
   $(function() {
     $("#profile-list").DataTable({
@@ -40,27 +41,15 @@
         }
       }
     });
-    function copyTextToClipboard(text) {
-      var textArea = document.createElement("textarea");
-      textArea.style.position = 'fixed';
-      textArea.style.top = 0;
-      textArea.style.left = 0;
-      textArea.style.width = '2em';
-      textArea.style.height = '2em';
-      textArea.style.padding = 0;
-      textArea.style.border = 'none';
-      textArea.style.outline = 'none';
-      textArea.style.boxShadow = 'none';
-      textArea.style.background = 'transparent';
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-    }
-    $(".copy-url").click(function() {
-      var url = $(this).attr("data-url");
-      copyTextToClipboard(url);
+    $('[data-toggle="tooltip"]').tooltip({
+      trigger: "manual"
+    });
+    $('[data-toggle="tooltip"]').on("mouseleave blur", function() {
+      $(this).tooltip("hide");
+    });
+    var clipboard = new ClipboardJS(".clipboard");
+    clipboard.on("success", function(e) {
+      $(e.trigger).tooltip("show");
     });
   });
 </script>
@@ -97,21 +86,21 @@
     <tbody>
       {% for profile in profiles %}
       <tr>
-        <td><a href="{% url 'profile' profile.student_id %}">{{ profile.student_id }}</a></td>
-        <td><a href="{% url 'profile' profile.student_id %}">{{ profile.name }}</a></td>
-        <td>{{ profile.gender|gender }}</td>
-        <td>{{ profile.department_name_list|join:"、" }}</td>
-        <td>{{ profile.class_name_list|join:"、" }}</td>
-        <td>{{ profile.completeness|percentage:"color"|safe }}</td>
-        <td>
+        <td class="align-middle"><a href="{% url 'profile' profile.student_id %}">{{ profile.student_id }}</a></td>
+        <td class="align-middle"><a href="{% url 'profile' profile.student_id %}">{{ profile.name }}</a></td>
+        <td class="align-middle">{{ profile.gender|gender }}</td>
+        <td class="align-middle">{{ profile.department_name_list|join:"、" }}</td>
+        <td class="align-middle">{{ profile.class_name_list|join:"、" }}</td>
+        <td class="align-middle">{{ profile.completeness|percentage:"color"|safe }}</td>
+        <td class="align-middle">
           {% if profile.user.last_login %}
           <span class="text-info">{{ profile.user.last_login|date:"Y-m-d H:i:s" }}</span>
           {% else %}
           <span class="text-warning">尚未登录</span>
           {% endif %}
         </td>
-        <td>
-          <a href="#" class="copy-url" data-url="{{ profile.invitation_url }}">复制链接</a>
+        <td class="align-middle">
+          <button type="button" class="btn btn-primary clipboard" data-toggle="tooltip" title="已复制" data-clipboard-text="{{ profile.invitation_url }}">复制链接</button>
         </td>
       </tr>
       {% endfor %}
