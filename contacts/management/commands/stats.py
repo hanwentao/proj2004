@@ -48,6 +48,7 @@ class Command(BaseCommand):
             writer.writerow([
                 '代码',
                 '院系',
+                '班数',
                 '人数',
                 '登录人数',
                 '50%填写人数',
@@ -59,6 +60,7 @@ class Command(BaseCommand):
             ])
             for department in Department.objects.all():
                 alumni_set = set()
+                class_counter = 0
                 counter = 0
                 login_counter = 0
                 p50_counter = 0
@@ -68,6 +70,7 @@ class Command(BaseCommand):
                 not_attend_counter = 0
                 email_counter = 0
                 for class_ in department.class_set.all():
+                    if class_.split_name[1] == -1: class_counter += 1
                     for profile in class_.profile_set.all():
                         user = profile.user
                         if not user.is_active:
@@ -87,6 +90,7 @@ class Command(BaseCommand):
                 writer.writerow([
                     department.code,
                     department.name,
+                    class_counter,
                     counter,
                     login_counter,
                     p50_counter,
