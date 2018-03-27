@@ -109,9 +109,6 @@ class Command(BaseCommand):
             user = User.objects.get(username=student_id)
             profile = user.profile
             extra = user.extra
-            self._check_equal(profile.name, name, student_id)
-            self._check_equal(profile.department_name, department, student_id)
-            self._check_equal(profile.class_name, class_, student_id)
             writer_group.append([
                 department,
                 class_,
@@ -123,6 +120,9 @@ class Command(BaseCommand):
                 '是' if extra.photo else '否',
                 f'{extra.email_prefix}04@tsinghua.org.cn' if extra.email_prefix else '未申请',
             ])
+            self._check_equal(profile.name, name, student_id)
+            self._check_equal(profile.department_name, department, student_id)
+            self._check_equal(profile.class_name, class_, student_id)
         writer_group.close()
 
     def _check_equal(self, left, right, id):
