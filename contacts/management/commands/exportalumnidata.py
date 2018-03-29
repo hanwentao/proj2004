@@ -43,7 +43,7 @@ class Command(BaseCommand):
                 '是否开通校友邮箱', '是否办理校友卡',
             ] + (['URL'] if with_url else []))
         num_alumni = 0
-        for profile in Profile.objects.order_by('student_id'):
+        for profile in Profile.objects.filter(user__is_active=True).order_by('student_id'):
             writer.writerow([
                 profile.name,
                 '男' if profile.gender == 'M' else '女',
@@ -51,9 +51,9 @@ class Command(BaseCommand):
                 profile.student_id,
                 profile.enroll_year,
                 profile.graduate_year,
-                profile.department,
+                profile.department_name,
                 profile.major,
-                profile.clazz,
+                profile.class_name,
                 smart_join(profile.organization, profile.position, profile.title),
                 profile.industry,
                 profile.mobile,
