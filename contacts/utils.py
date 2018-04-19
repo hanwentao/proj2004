@@ -1,6 +1,8 @@
 import hashlib
 import re
 
+from django.conf import settings
+
 def unique(list):
     return [x for i, x in enumerate(list) if x not in list[:i]]
 
@@ -20,3 +22,8 @@ def split_class_name(name, default_grade=None):
         grade = -1
     number = int(parts[1][1:] or '-1')
     return (parts[0], grade, number, parts[2])
+
+def split_class_name_for_sorted(class_):
+    name = class_.name
+    code, grade, number, ext = split_class_name(name, settings.DEFAULT_GRADE)
+    return (grade, code, number, ext)
