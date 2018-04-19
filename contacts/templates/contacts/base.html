@@ -1,10 +1,13 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block body %}
 <header>
   <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top" role="navigation">
     <div class="container">
-      <span class="navbar-brand mb-0 h1">清华四字班秩年</span>
+      <a class="navbar-brand" href="#">
+        <img src="{% static 'img/brand-50.png' %}" alt="清华四字班秩年">
+      </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-main" aria-controls="navbar-main" aria-expanded="false" aria-label="开关导航栏">
         <span class="navbar-toggler-icon"></span>
       </button>
