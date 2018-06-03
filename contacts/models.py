@@ -187,7 +187,7 @@ class Extra(models.Model):
         format='JPEG',
         options={'quality': 95},
     )
-    photo_valid = models.BooleanField('校友卡证件照是否合格')
+    photo_valid = models.NullBooleanField('校友卡证件照是否合格')
     password_reset = models.DateTimeField(null=True, blank=True)
 
     class Meta:

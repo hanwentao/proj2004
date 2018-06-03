@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 
 from ...models import (
     Department,
-    Clazz,
+    Class,
     Profile,
     Extra,
 )
@@ -26,12 +26,12 @@ def create_user_with_basic_info(student_id, name, gender, dob, enroll_year, grad
     department, _ = Department.objects.update_or_create(name=department_name, defaults={
         'code': department_code,
     })
-    class_, _ = Clazz.objects.update_or_create(name=class_name, defaults={
+    class_, _ = Class.objects.update_or_create(name=class_name, defaults={
         'department': department,
     })
     profile.major = major
     profile.save()
-    profile.clazzes.add(class_)
+    profile.classes.add(class_)
     return created
 
 
@@ -55,7 +55,7 @@ class Command(BaseCommand):
                     first = False
                     if with_header:
                         continue
-                department_code, department, student_id, name, gender, dob, clazz, major, enroll_date, graduate_date, grade, graduate_category = row
+                department_code, department, student_id, name, gender, dob, class_, major, enroll_date, graduate_date, grade, graduate_category = row
                 gender = 'M' if gender == '男' else 'F'
                 try:
                     dob = datetime.datetime.strptime(dob, '%Y%m%d').date()
@@ -69,7 +69,7 @@ class Command(BaseCommand):
                     graduate_year = int(graduate_date[:4])
                 except ValueError:
                     graduate_year = 2008
-                if create_user_with_basic_info(student_id, name, gender, dob, enroll_year, graduate_year, department, major, clazz, department_code):
+                if create_user_with_basic_info(student_id, name, gender, dob, enroll_year, graduate_year, department, major, class_, department_code):
                     num_alumni_created += 1
                 else:
                     num_alumni_updated += 1
